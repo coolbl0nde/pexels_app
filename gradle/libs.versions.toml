@@ -8,7 +8,7 @@ androidxActivity = "1.9.3"
 ktx = "1.15.0"
 material = "1.12.0"
 junit = "4.13.2"
-kotlin = "1.9.0"
+kotlin = "2.1.0"
 compose-bom = "2023.08.00"
 material3 = "1.4.0-alpha07"
 navigationCompose = "2.7.1"
@@ -38,3 +38,4 @@ androidx-navigation-compose = { group = "androidx.navigation", name = "navigatio
 android-application = {id = "com.android.application", version.ref = "androidGradlePlugin" }
 android-library = {id = "com.android.library", version.ref = "androidGradlePlugin"}
 kotlin-android = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin"}
+compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
