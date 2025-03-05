@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -21,7 +22,6 @@ fun HomeScreen (
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
     ) {
         SearchBarComponent(
             modifier = Modifier
@@ -32,6 +32,12 @@ fun HomeScreen (
         Spacer(modifier = Modifier.height(14.dp))
 
         HorizontalListComponent(
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        ImagesListComponent(
             modifier = Modifier.padding(start = 20.dp, end = 20.dp)
         )
     }

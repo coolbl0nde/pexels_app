@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.selection.toggleable
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
@@ -23,7 +24,8 @@ fun HorizontalListItem(
     Box (
         modifier = Modifier
             .clip(RoundedCornerShape(50))
-            .background(if (isSelected) Color(0xFFBB1020) else Color(0xFFF3F5F9))
+            .background(if (isSelected) MaterialTheme.colorScheme.primary
+                        else MaterialTheme.colorScheme.surface)
             .toggleable(
                 value = isSelected,
                 onValueChange = { onClick() }
@@ -31,7 +33,8 @@ fun HorizontalListItem(
     ) {
         Text(
             text = text,
-            color = if (isSelected) Color.White else Color.Black,
+            color = if (isSelected) MaterialTheme.colorScheme.onPrimary
+                    else MaterialTheme.colorScheme.onSurface,
             fontSize = 14.sp,
             modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
         )

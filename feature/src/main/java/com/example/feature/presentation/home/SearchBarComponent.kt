@@ -1,5 +1,6 @@
 package com.example.feature.presentation.home
 
+import androidx.compose.foundation.background
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -42,12 +43,20 @@ fun SearchBarComponent(
                 leadingIcon = { Icon(
                     painter = painterResource(R.drawable.search_icon),
                     contentDescription = "Search",
-                    tint = Color(0xFFBB1020)
-                ) }
+                    tint = MaterialTheme.colorScheme.primary
+                ) },
+                colors = SearchBarDefaults.inputFieldColors(
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                )
             )
         },
         expanded = expanded,
         onExpandedChange = { expanded = it },
+        colors = SearchBarDefaults.colors(
+            containerColor = MaterialTheme.colorScheme.surface,
+            dividerColor = Color.Transparent
+        ),
         modifier = modifier
     ) {
 
