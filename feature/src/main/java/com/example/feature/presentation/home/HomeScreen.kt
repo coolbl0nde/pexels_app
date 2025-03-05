@@ -2,6 +2,7 @@ package com.example.feature.presentation.home
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
@@ -20,11 +21,18 @@ fun HomeScreen (
     Column(
         modifier = Modifier
             .fillMaxSize()
+            .background(Color.White)
     ) {
         SearchBarComponent(
             modifier = Modifier
                 .padding(start = 20.dp, end = 20.dp, top = 10.dp)
                 .align(Alignment.CenterHorizontally)
+        )
+
+        Spacer(modifier = Modifier.height(14.dp))
+
+        HorizontalListComponent(
+            modifier = Modifier.padding(start = 20.dp, end = 20.dp)
         )
     }
 }
