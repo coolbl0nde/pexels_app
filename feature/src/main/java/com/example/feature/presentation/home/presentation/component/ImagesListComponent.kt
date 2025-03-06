@@ -16,33 +16,24 @@ import com.example.feature.R
 
 @Composable
 fun ImagesListComponent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    imageList: List<Int>
 ) {
 
-    val imageList = listOf(
-        R.drawable.picture_1,
-        R.drawable.picture_2,
-        R.drawable.picture_3,
-        R.drawable.picture_4,
-        R.drawable.picture_5,
-        R.drawable.picture_6
-    )
-
     LazyVerticalStaggeredGrid(
+        modifier = modifier,
         columns = StaggeredGridCells.Adaptive(155.dp),
         verticalItemSpacing = 10.dp,
         horizontalArrangement = Arrangement.spacedBy(10.dp),
         content = {
             items(imageList) { imageRes ->
                 Image(
+                    modifier = Modifier.clip(RoundedCornerShape(20)),
                     painter = painterResource(id = imageRes),
                     contentDescription = null,
                     contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .clip(RoundedCornerShape(20))
                 )
             }
         },
-        modifier = modifier
     )
 }

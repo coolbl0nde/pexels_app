@@ -53,6 +53,9 @@ android {
 
 dependencies {
 
+    implementation(project(":feature"))
+    implementation(project(":core"))
+
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
     implementation(libs.androidx.activity.compose)
@@ -62,7 +65,6 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
-    implementation(project(":feature"))
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.material)
     testImplementation(libs.junit)

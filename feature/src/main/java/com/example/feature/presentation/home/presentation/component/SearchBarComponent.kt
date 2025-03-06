@@ -14,31 +14,28 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import com.example.feature.R
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SearchBarComponent(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    expanded: Boolean,
+    onExpandedChange: (Boolean) -> Unit,
+    text: String,
+    onTextChange: (String) -> Unit,
 ) {
-
-    var expanded by remember {
-        mutableStateOf(false)
-    }
-
-    var text by remember {
-        mutableStateOf("")
-    }
-
     SearchBar(
+        modifier = modifier,
         inputField = {
             SearchBarDefaults.InputField(
                 query = text,
-                onQueryChange = { text = it},
+                onQueryChange = onTextChange,
                 onSearch = {},
                 expanded = expanded,
-                onExpandedChange = { expanded = it },
-                placeholder = { Text(text = "Search") },
+                onExpandedChange = onExpandedChange,
+                placeholder = { Text(text = stringResource(R.string.search)) },
                 leadingIcon = { Icon(
                     painter = painterResource(R.drawable.search_icon),
                     contentDescription = "Search",
@@ -47,16 +44,15 @@ fun SearchBarComponent(
                 colors = SearchBarDefaults.inputFieldColors(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     focusedContainerColor = MaterialTheme.colorScheme.surface,
-                )
+                ),
             )
         },
         expanded = expanded,
-        onExpandedChange = { expanded = it },
+        onExpandedChange = onExpandedChange,
         colors = SearchBarDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surface,
             dividerColor = Color.Transparent
         ),
-        modifier = modifier
     ) {
 
     }

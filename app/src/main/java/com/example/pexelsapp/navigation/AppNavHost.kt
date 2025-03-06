@@ -10,14 +10,14 @@ import com.example.feature.presentation.home.presentation.screen.HomeScreen
 
 @Composable
 fun AppNavHost(
+    modifier: Modifier = Modifier,
     navController: NavHostController,
-    modifier: Modifier = Modifier
 ) {
 
     NavHost(
+        modifier = modifier,
         navController = navController,
         startDestination = Home,
-        modifier = modifier
     ){
         composable<Home>{
             HomeScreen(navController)

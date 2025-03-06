@@ -23,7 +23,7 @@ class MainActivity : ComponentActivity() {
             PexelsAppTheme {
                 Surface(
                     modifier = Modifier.fillMaxSize(),
-                    color = MaterialTheme.colorScheme.background
+                    color = MaterialTheme.colorScheme.background,
                 ) {
 
                     val navController = rememberNavController()
@@ -33,7 +33,10 @@ class MainActivity : ComponentActivity() {
                             BottomNavigationBar(navController)
                         }
                     ) { paddingValues ->
-                        AppNavHost(navController = navController, modifier = Modifier.padding(paddingValues))
+                        AppNavHost(
+                            modifier = Modifier.padding(paddingValues),
+                            navController = navController,
+                        )
                     }
 
                 }
@@ -45,7 +48,7 @@ class MainActivity : ComponentActivity() {
 
 @Preview(showBackground = true)
 @Composable
-fun GreetingPreview() {
+fun MainPreview() {
     PexelsAppTheme {
         AppNavHost(navController = rememberNavController())
     }

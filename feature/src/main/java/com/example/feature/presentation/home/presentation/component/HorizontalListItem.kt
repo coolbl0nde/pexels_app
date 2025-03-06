@@ -17,9 +17,8 @@ import androidx.compose.ui.unit.sp
 fun HorizontalListItem(
     text: String,
     isSelected: Boolean,
-    onClick: () -> Unit
+    onClick: () -> Unit,
 ) {
-
     Box (
         modifier = Modifier
             .clip(RoundedCornerShape(50))
@@ -28,14 +27,19 @@ fun HorizontalListItem(
             .toggleable(
                 value = isSelected,
                 onValueChange = { onClick() }
-            )
+            ),
     ) {
         Text(
+            modifier = Modifier.padding(
+                top = 10.dp,
+                bottom = 10.dp,
+                start = 20.dp,
+                end = 20.dp
+            ),
             text = text,
             color = if (isSelected) MaterialTheme.colorScheme.onPrimary
                     else MaterialTheme.colorScheme.onSurface,
             fontSize = 14.sp,
-            modifier = Modifier.padding(top = 10.dp, bottom = 10.dp, start = 20.dp, end = 20.dp)
         )
     }
 

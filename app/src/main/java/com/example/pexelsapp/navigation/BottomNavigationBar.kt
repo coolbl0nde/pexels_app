@@ -27,16 +27,29 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.core.TAB_SELECTOR_ANIMATION_DURATION
 import com.example.pexelsapp.R
 
-data class TopLevelRoute<T : Any>(val route: T, val lightSelectedIconRes: Int,
-                                  val darkSelectedIconRes: Int, val unselectedIconRes: Int)
+data class TopLevelRoute<T : Any>(
+    val route: T,
+    val lightSelectedIconRes: Int,
+    val darkSelectedIconRes: Int,
+    val unselectedIconRes: Int,
+)
 
 val topLevelRoutes = listOf(
-    TopLevelRoute(Home, R.drawable.light_filled_home_icon,
-        R.drawable.dark_filled_home_icon, R.drawable.home_icon),
-    TopLevelRoute(Bookmarks, R.drawable.light_filled_bookmark_icon,
-        R.drawable.dark_filled_bookmark_icon, R.drawable.bookmark_icon)
+    TopLevelRoute(
+        Home,
+        R.drawable.light_filled_home_icon,
+        R.drawable.dark_filled_home_icon,
+        R.drawable.home_icon,
+    ),
+    TopLevelRoute(
+        Bookmarks,
+        R.drawable.light_filled_bookmark_icon,
+        R.drawable.dark_filled_bookmark_icon,
+        R.drawable.bookmark_icon,
+    ),
 )
 
 @Composable
@@ -58,28 +71,33 @@ fun BottomNavigationBar(
 
             val indicatorWidth by animateDpAsState(
                 targetValue = if (index == selectedItem) 24.dp else 0.dp,
-                animationSpec = tween(durationMillis = 500, easing = LinearOutSlowInEasing)
+                animationSpec = tween(
+                    durationMillis = TAB_SELECTOR_ANIMATION_DURATION,
+                    easing = LinearOutSlowInEasing
+                ),
             )
 
             NavigationBarItem(
                 selected = index == selectedItem,
                 icon = {
                     Box(
-                        modifier = Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.TopCenter
+                        modifier = Modifier.fillMaxSize(),
+                        contentAlignment = Alignment.TopCenter,
                     ) {
                         if (selectedItem == index) {
                             Box(
                                 modifier = Modifier
                                     .height(2.dp)
                                     .width(indicatorWidth)
-                                    .background(color = MaterialTheme.colorScheme.primary,
-                                        shape = RoundedCornerShape(50))
+                                    .background(
+                                        color = MaterialTheme.colorScheme.primary,
+                                        shape = RoundedCornerShape(50)
+                                    ),
                             )
                         }
 
                         Icon(
+                            modifier = Modifier.align(Alignment.Center),
                             painter =
                                 if (selectedItem == index) {
                                     if (isSystemInDarkTheme()) {
@@ -91,7 +109,6 @@ fun BottomNavigationBar(
                                 else painterResource(topLevelRoute.unselectedIconRes),
                             contentDescription = null,
                             tint = Color.Unspecified,
-                            modifier = Modifier.align(Alignment.Center)
                         )
                     }
                 },
