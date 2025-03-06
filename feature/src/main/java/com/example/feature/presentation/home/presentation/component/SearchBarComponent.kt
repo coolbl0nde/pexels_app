@@ -38,7 +38,7 @@ fun SearchBarComponent(
                 onExpandedChange = onExpandedChange,
                 placeholder = { Text(
                     text = stringResource(R.string.search),
-                    color = Color(0xFF868686),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )},
                 leadingIcon = { Icon(
                     painter = painterResource(R.drawable.search_icon),
@@ -46,7 +46,7 @@ fun SearchBarComponent(
                     tint = MaterialTheme.colorScheme.primary
                 ) },
                 trailingIcon = {
-                    if (text != "") {
+                    if (text.isEmpty()) {
                         Icon(
                             modifier = Modifier.clickable { onTextChange("") },
                             painter = painterResource(R.drawable.clear_icon),
