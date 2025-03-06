@@ -15,6 +15,7 @@ import androidx.compose.ui.unit.sp
 
 @Composable
 fun HorizontalListItem(
+    modifier: Modifier = Modifier,
     text: String,
     isSelected: Boolean,
     onClick: () -> Unit,

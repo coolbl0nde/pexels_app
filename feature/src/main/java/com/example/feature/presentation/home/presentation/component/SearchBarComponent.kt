@@ -23,8 +23,8 @@ import com.example.feature.R
 fun SearchBarComponent(
     modifier: Modifier = Modifier,
     expanded: Boolean,
-    onExpandedChange: (Boolean) -> Unit,
     text: String,
+    onExpandedChange: (Boolean) -> Unit,
     onTextChange: (String) -> Unit,
 ) {
     SearchBar(
