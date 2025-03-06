@@ -1,4 +1,4 @@
-package com.example.feature.presentation.home
+package com.example.feature.presentation.home.presentation.component
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
