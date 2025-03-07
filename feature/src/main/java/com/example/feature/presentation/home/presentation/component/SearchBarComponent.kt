@@ -46,7 +46,7 @@ fun SearchBarComponent(
                     tint = MaterialTheme.colorScheme.primary
                 ) },
                 trailingIcon = {
-                    if (text.isEmpty()) {
+                    if (text.isNotEmpty()) {
                         Icon(
                             modifier = Modifier.clickable { onTextChange("") },
                             painter = painterResource(R.drawable.clear_icon),
