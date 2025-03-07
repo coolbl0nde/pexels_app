@@ -16,7 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.example.core.utils.empty
 import com.example.feature.R
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -48,7 +51,7 @@ fun SearchBarComponent(
                 trailingIcon = {
                     if (text.isNotEmpty()) {
                         Icon(
-                            modifier = Modifier.clickable { onTextChange("") },
+                            modifier = Modifier.clickable { onTextChange(String.empty) },
                             painter = painterResource(R.drawable.clear_icon),
                             contentDescription = null,
                         )
