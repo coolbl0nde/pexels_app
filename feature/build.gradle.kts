@@ -39,6 +39,7 @@ composeCompiler {
 }
 
 dependencies {
+    implementation(project(":core"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)

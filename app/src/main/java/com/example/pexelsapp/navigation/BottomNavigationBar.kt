@@ -27,7 +27,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.core.TAB_SELECTOR_ANIMATION_DURATION
+import com.example.core.utils.TAB_SELECTOR_ANIMATION_DURATION
 import com.example.pexelsapp.R
 
 data class TopLevelRoute<T : Any>(

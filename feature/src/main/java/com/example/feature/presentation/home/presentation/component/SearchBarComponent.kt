@@ -1,5 +1,6 @@
 package com.example.feature.presentation.home.presentation.component
 
+import androidx.compose.foundation.clickable
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -15,7 +16,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.example.core.utils.empty
 import com.example.feature.R
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -35,12 +39,24 @@ fun SearchBarComponent(
                 onSearch = {},
                 expanded = expanded,
                 onExpandedChange = onExpandedChange,
-                placeholder = { Text(text = stringResource(R.string.search)) },
+                placeholder = { Text(
+                    text = stringResource(R.string.search),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                )},
                 leadingIcon = { Icon(
                     painter = painterResource(R.drawable.search_icon),
                     contentDescription = "Search",
                     tint = MaterialTheme.colorScheme.primary
                 ) },
+                trailingIcon = {
+                    if (text.isNotEmpty()) {
+                        Icon(
+                            modifier = Modifier.clickable { onTextChange(String.empty) },
+                            painter = painterResource(R.drawable.clear_icon),
+                            contentDescription = null,
+                        )
+                    }
+                },
                 colors = SearchBarDefaults.inputFieldColors(
                     unfocusedContainerColor = MaterialTheme.colorScheme.surface,
                     focusedContainerColor = MaterialTheme.colorScheme.surface,

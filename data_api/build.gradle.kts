@@ -1,7 +1,30 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
 }
+
+fun loadLocalProperties(): Properties{
+    val localPropertiesFile = File(rootProject.rootDir,"local.properties")
+
+    if (!localPropertiesFile.exists()) {
+        throw GradleException("Error: file local.properties doesn't exist, please create file and add api key")
+    }
+
+    val properties = Properties().apply {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+
+    if (properties.getProperty("PEXELS_API_KEY").isNullOrBlank()) {
+        throw GradleException("Error: can't find PEXELS_API_KEY in local.properties")
+    }
+
+    return properties
+}
+
+
+val properties = loadLocalProperties()
 
 android {
     namespace = "com.example.data_api"
@@ -12,6 +35,9 @@ android {
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles("consumer-rules.pro")
+
+        buildConfigField ("String", "PEXELS_API_KEY",
+            "\"${properties.getProperty("PEXELS_API_KEY")}\"")
     }
 
     buildTypes {
@@ -29,6 +55,9 @@ android {
     }
     kotlinOptions {
         jvmTarget = "17"
+    }
+    buildFeatures {
+        buildConfig = true
     }
 }
 
