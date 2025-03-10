@@ -23,6 +23,7 @@ import com.example.feature.presentation.home.presentation.HomeViewModel
 import com.example.feature.presentation.home.presentation.component.HorizontalListComponent
 import com.example.feature.presentation.home.presentation.component.ImagesListComponent
 import com.example.feature.presentation.home.presentation.component.SearchBarComponent
+import kotlinx.collections.immutable.toPersistentList
 
 @Composable
 fun HomeScreen (
@@ -73,7 +74,7 @@ fun HomeScreen (
                 start = 20.dp,
                 end = 20.dp,
             ),
-            featuredCollection = featuredCollections,
+            featuredCollection = featuredCollections.toPersistentList(),
             selectedItem = selectedItem,
             onSelectedItemChange = { viewModel.selectItem(it) },
         )

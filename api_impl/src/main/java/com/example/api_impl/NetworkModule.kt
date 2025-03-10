@@ -1,9 +1,13 @@
 package com.example.api_impl
 
+import com.example.api_impl.mapper.FeaturedCollectionResponseMapper
 import com.example.api_impl.repository.PexelsRepositoryImpl
+import com.example.core.utils.BASE_URL
 import com.example.data_api.BuildConfig
 import com.example.data_api.api.PexelsApi
 import com.example.data_api.repository.PexelsRepository
+import com.google.gson.Gson
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -20,23 +24,46 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideOkHttp(): OkHttpClient{
-        return  OkHttpClient.Builder()
-            .addInterceptor(Interceptor { chain ->
-                val request = chain.request().newBuilder()
-                    .addHeader("Authorization", BuildConfig.PEXELS_API_KEY)
-                    .build()
-                chain.proceed(request)
-            }).build()
+    fun provideAuthInterceptor() : Interceptor {
+        return Interceptor { chain ->
+            val request = chain.request().newBuilder()
+                .addHeader("Authorization", BuildConfig.PEXELS_API_KEY)
+                .build()
+            chain.proceed(request)
+        }
     }
 
     @Provides
     @Singleton
-    fun provideRetrofit(client: OkHttpClient): Retrofit{
+    fun provideOkHttp(authInterceptor: Interceptor): OkHttpClient{
+        return  OkHttpClient.Builder()
+            .addInterceptor(authInterceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGson(): Gson {
+        return GsonBuilder().create()
+    }
+
+    @Provides
+    @Singleton
+    fun provideGsonConverterFactory(gson: Gson): GsonConverterFactory {
+        return GsonConverterFactory.create(gson)
+    }
+
+
+    @Provides
+    @Singleton
+    fun provideRetrofit(
+        client: OkHttpClient,
+        gsonConverterFactory: GsonConverterFactory
+    ): Retrofit{
         return Retrofit.Builder()
-            .baseUrl("https://api.pexels.com/v1/")
+            .baseUrl(BASE_URL)
             .client(client)
-            .addConverterFactory(GsonConverterFactory.create())
+            .addConverterFactory(gsonConverterFactory)
             .build()
     }
 
@@ -46,10 +73,20 @@ object NetworkModule {
         return retrofit.create(PexelsApi::class.java)
     }
 
+    fun provideFeaturedCollectionResponseMapper(): FeaturedCollectionResponseMapper{
+        return FeaturedCollectionResponseMapper()
+    }
+
     @Provides
     @Singleton
-    fun providePexelsRepository(pexelsApi: PexelsApi): PexelsRepository {
-        return PexelsRepositoryImpl(pexelsApi = pexelsApi)
+    fun providePexelsRepository(
+        pexelsApi: PexelsApi,
+        mapper: FeaturedCollectionResponseMapper,
+    ): PexelsRepository {
+        return PexelsRepositoryImpl(
+            pexelsApi = pexelsApi,
+            mapper = mapper
+        )
     }
 
 }

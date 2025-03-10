@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.dagger.hilt.android)
     implementation(libs.androidx.hilt.navigation)
+    implementation(libs.kotlinx.collections.immutable)
     kapt(libs.dagger.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)

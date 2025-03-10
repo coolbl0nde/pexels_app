@@ -7,11 +7,12 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.core.model.FeaturedCollection
+import kotlinx.collections.immutable.ImmutableList
 
 @Composable
 fun HorizontalListComponent(
     modifier: Modifier = Modifier,
-    featuredCollection: List<FeaturedCollection>,
+    featuredCollection: ImmutableList<FeaturedCollection>,
     selectedItem: String,
     onSelectedItemChange: (String) -> Unit,
 ) {

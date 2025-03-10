@@ -10,7 +10,7 @@ fun loadLocalProperties(): Properties{
     val localPropertiesFile = File(rootProject.rootDir,"local.properties")
 
     if (!localPropertiesFile.exists()) {
-        throw GradleException("Error: file local.properties doesn't exist, please create file and add api key")
+        throw GradleException("Error: file local.properties doesn't exist, please create file and add PEXELS_API_KEY")
     }
 
     val properties = Properties().apply {
