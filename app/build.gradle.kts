@@ -1,9 +1,33 @@
+import java.util.Properties
+
 plugins {
     alias(libs.plugins.android.application)
     alias(libs.plugins.kotlin.android)
     alias(libs.plugins.compose.compiler)
     alias(libs.plugins.kotlin.serialization)
+    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.dagger.hilt.android)
 }
+
+fun loadLocalProperties(): Properties {
+    val localPropertiesFile = File(rootProject.rootDir,"local.properties")
+
+    if (!localPropertiesFile.exists()) {
+        throw GradleException("Error: file local.properties doesn't exist, please create file and add api key")
+    }
+
+    val properties = Properties().apply {
+        localPropertiesFile.inputStream().use { load(it) }
+    }
+
+    if (properties.getProperty("PEXELS_API_KEY").isNullOrBlank()) {
+        throw GradleException("Error: can't find PEXELS_API_KEY in local.properties")
+    }
+
+    return properties
+}
+
+val properties = loadLocalProperties()
 
 android {
     namespace = "com.example.pexelsapp"
@@ -20,6 +44,9 @@ android {
         vectorDrawables {
             useSupportLibrary = true
         }
+
+        buildConfigField ("String", "PEXELS_API_KEY",
+            "\"${properties.getProperty("PEXELS_API_KEY")}\"")
     }
 
     buildTypes {
@@ -40,6 +67,7 @@ android {
     }
     buildFeatures {
         compose = true
+        buildConfig = true
     }
     composeOptions {
         kotlinCompilerExtensionVersion = "1.5.15"
@@ -67,6 +95,8 @@ dependencies {
     implementation(libs.androidx.navigation.compose)
     implementation(libs.kotlinx.serialization.json)
     implementation(libs.androidx.compose.material)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)
@@ -74,4 +104,8 @@ dependencies {
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     debugImplementation(libs.androidx.compose.ui.tooling)
     debugImplementation(libs.androidx.compose.ui.test.manifest)
+}
+
+kapt {
+    correctErrorTypes = true
 }
