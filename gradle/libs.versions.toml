@@ -14,6 +14,11 @@ material3 = "1.4.0-alpha07"
 navigationCompose = "2.8.8"
 kotlin-serialization = "2.0.21"
 kotlinx-serialization-json = "1.7.3"
+dagger-hilt = "2.51.1"
+retrofit2 = "2.9.0"
+okHttp3 = "4.12.0"
+hilt-navigation-compose = "1.2.0"
+kotlinx-collections-immutable = "0.3.8"
 
 
 [libraries]
@@ -35,6 +40,13 @@ androidx-compose-ui-test-manifest = { group = "androidx.compose.ui", name = "ui-
 androidx-compose-bom = { group = "androidx.compose", name = "compose-bom", version.ref = "compose-bom"}
 androidx-navigation-compose = { group = "androidx.navigation", name = "navigation-compose", version.ref = "navigationCompose"}
 kotlinx-serialization-json = { group = "org.jetbrains.kotlinx", name = "kotlinx-serialization-json", version.ref = "kotlinx-serialization-json"}
+dagger-hilt-android = { group = "com.google.dagger", name = "hilt-android", version.ref = "dagger-hilt"}
+dagger-hilt-android-compiler = { group = "com.google.dagger", name = "hilt-android-compiler", version.ref = "dagger-hilt"}
+retrofit2 = { group = "com.squareup.retrofit2", name = "retrofit", version.ref = "retrofit2" }
+retrofit2-converter-gson = { group = "com.squareup.retrofit2", name = "converter-gson", version.ref = "retrofit2"}
+okhttp3 = { group = "com.squareup.okhttp3", name = "okhttp", version.ref = "okHttp3"}
+androidx-hilt-navigation = { group = "androidx.hilt", name = "hilt-navigation-compose", version.ref = "hilt-navigation-compose"}
+kotlinx-collections-immutable = { group = "org.jetbrains.kotlinx", name = "kotlinx-collections-immutable", version.ref = "kotlinx-collections-immutable"}
 
 
 [plugins]
@@ -43,3 +55,5 @@ android-library = {id = "com.android.library", version.ref = "androidGradlePlugi
 kotlin-android = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin"}
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization" }
+dagger-hilt-android = {id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt"}
+kotlin-kapt = {id = "kotlin-kapt"}

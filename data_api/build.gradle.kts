@@ -3,13 +3,14 @@ import java.util.Properties
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.kapt)
 }
 
 fun loadLocalProperties(): Properties{
     val localPropertiesFile = File(rootProject.rootDir,"local.properties")
 
     if (!localPropertiesFile.exists()) {
-        throw GradleException("Error: file local.properties doesn't exist, please create file and add api key")
+        throw GradleException("Error: file local.properties doesn't exist, please create file and add PEXELS_API_KEY")
     }
 
     val properties = Properties().apply {
@@ -62,11 +63,21 @@ android {
 }
 
 dependencies {
+    implementation(project(":core"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material)
+    implementation(libs.retrofit2)
+    implementation(libs.retrofit2.converter.gson)
+    implementation(libs.okhttp3)
+    implementation(libs.dagger.hilt.android)
+    kapt(libs.dagger.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)
+}
+
+kapt {
+    correctErrorTypes = true
 }

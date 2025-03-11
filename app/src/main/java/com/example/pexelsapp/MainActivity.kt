@@ -15,7 +15,9 @@ import androidx.navigation.compose.rememberNavController
 import com.example.pexelsapp.navigation.AppNavHost
 import com.example.pexelsapp.navigation.BottomNavigationBar
 import com.example.pexelsapp.ui.theme.PexelsAppTheme
+import dagger.hilt.android.AndroidEntryPoint
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
