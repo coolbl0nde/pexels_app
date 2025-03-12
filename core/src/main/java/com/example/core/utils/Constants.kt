@@ -7,3 +7,5 @@ const val AMOUNT_OF_PAGE_FEATURED_COLLECTIONS = 1
 const val AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS = 7
 
 const val BASE_URL = "https://api.pexels.com/v1/"
+
+const val AMOUNT_OF_PER_PAGE_PHOTOS = 30

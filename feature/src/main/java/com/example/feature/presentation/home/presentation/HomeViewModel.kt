@@ -9,6 +9,7 @@ import com.example.core.model.FeaturedCollection
 import com.example.core.model.Photo
 import com.example.core.utils.AMOUNT_OF_PAGE_FEATURED_COLLECTIONS
 import com.example.core.utils.AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS
+import com.example.core.utils.AMOUNT_OF_PER_PAGE_PHOTOS
 import com.example.core.utils.empty
 import com.example.feature.presentation.home.domain.usecase.GetFeaturedCollectionsUseCase
 import com.example.feature.presentation.home.domain.usecase.GetSearchedPhotosUseCase
@@ -43,10 +44,10 @@ class HomeViewModel @Inject constructor(
         viewModelScope.launch {
             getSearchedPhotosUseCase(
                 query = _selectedItem.value,
-                perPage = 30
+                perPage = AMOUNT_OF_PER_PAGE_PHOTOS
             )
                 .cachedIn(viewModelScope)
-                .collectLatest { pagingData ->
+                .collect { pagingData ->
                     _searchedPhotos.value = pagingData
                 }
         }
@@ -81,7 +82,6 @@ class HomeViewModel @Inject constructor(
     private fun initSelectedItem(result: List<FeaturedCollection>){
         if (_selectedItem.value.isEmpty() && result.isNotEmpty()){
             _selectedItem.value = result.first().title
-            Log.d("init selected value", "${_selectedItem.value}")
         }
     }
 

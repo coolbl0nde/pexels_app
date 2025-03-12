@@ -67,7 +67,7 @@ fun SearchBarComponent(
         onExpandedChange = onExpandedChange,
         colors = SearchBarDefaults.colors(
             containerColor = MaterialTheme.colorScheme.surface,
-            dividerColor = Color.Transparent
+            dividerColor = Color.Transparent,
         ),
     ) {
 

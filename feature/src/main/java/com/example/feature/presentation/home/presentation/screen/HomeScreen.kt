@@ -57,15 +57,6 @@ fun HomeScreen (
 
         val photos = viewModel.searchedPhotos.collectAsLazyPagingItems()
 
-        val imageList = listOf(
-            R.drawable.picture_1,
-            R.drawable.picture_2,
-            R.drawable.picture_3,
-            R.drawable.picture_4,
-            R.drawable.picture_5,
-            R.drawable.picture_6,
-        )
-
         SearchBarComponent(
             modifier = Modifier
                 .padding(
@@ -82,18 +73,21 @@ fun HomeScreen (
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        HorizontalListComponent(
-            modifier = Modifier.padding(
-                start = 20.dp,
-                end = 20.dp,
-            ),
-            featuredCollection = featuredCollections.toPersistentList(),
-            selectedItem = selectedItem,
-            onSelectedItemChange = { viewModel.selectItem(it) },
-            updatePhotos = { viewModel.updatePhotos() },
-        )
+        if (featuredCollections.isNotEmpty()) {
+            HorizontalListComponent(
+                modifier = Modifier.padding(
+                    start = 20.dp,
+                    end = 20.dp,
+                ),
+                featuredCollection = featuredCollections.toPersistentList(),
+                selectedItem = selectedItem,
+                onSelectedItemChange = { viewModel.selectItem(it) },
+                updatePhotos = { viewModel.updatePhotos() },
+            )
 
-        Spacer(modifier = Modifier.height(14.dp))
+            Spacer(modifier = Modifier.height(14.dp))
+        }
+
 
         when (photos.loadState.refresh) {
             is LoadState.Error -> {
@@ -106,7 +100,9 @@ fun HomeScreen (
                     verticalAlignment = Alignment.Top,
                 ) {
                     LinearProgressIndicator(
-                        modifier = Modifier.fillMaxWidth()
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        trackColor = MaterialTheme.colorScheme.surface,
                     )
                 }
             }

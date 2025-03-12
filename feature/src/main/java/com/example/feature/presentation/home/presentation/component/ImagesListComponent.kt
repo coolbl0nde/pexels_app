@@ -8,9 +8,11 @@ import androidx.compose.foundation.lazy.staggeredgrid.LazyVerticalStaggeredGrid
 import androidx.compose.foundation.lazy.staggeredgrid.StaggeredGridCells
 import androidx.compose.foundation.lazy.staggeredgrid.rememberLazyStaggeredGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
@@ -24,7 +26,6 @@ fun ImagesListComponent(
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier,
-        /*columns = StaggeredGridCells.Adaptive(155.dp),*/
         columns = StaggeredGridCells.Fixed(2),
         state = rememberLazyStaggeredGridState(),
         verticalItemSpacing = 10.dp,
@@ -32,8 +33,6 @@ fun ImagesListComponent(
         content = {
             items(
                 photos.itemCount,
-                key = { index -> photos[index]?.id
-                    ?: error("Item at index $index is null") },
             ) { index ->
                 val photo = photos[index]
 
@@ -42,13 +41,12 @@ fun ImagesListComponent(
 
                     AsyncImage(
                         modifier = Modifier
-                            .fillMaxWidth()
-                            .wrapContentHeight()
                             .clip(RoundedCornerShape(20))
                             .aspectRatio(aspectRatio),
                         model = photo.original,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
+                        placeholder = ColorPainter(MaterialTheme.colorScheme.surface)
                     )
                 }
             }
