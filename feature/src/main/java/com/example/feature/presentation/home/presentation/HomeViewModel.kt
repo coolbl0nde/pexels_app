@@ -41,7 +41,6 @@ class HomeViewModel @Inject constructor(
 
     fun updatePhotos() {
         viewModelScope.launch {
-            Log.d("selected value2", "${_selectedItem.value}")
             getSearchedPhotosUseCase(
                 query = _selectedItem.value,
                 perPage = 30
