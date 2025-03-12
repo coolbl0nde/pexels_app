@@ -28,8 +28,9 @@ class PexelsRepositoryImpl @Inject constructor(
     override fun getSearchedPhotos(query: String, perPage: Int): Flow<PagingData<Photo>> {
         return Pager(
             config = PagingConfig(
-                pageSize = 30,
-                prefetchDistance = 5,
+                pageSize = perPage,
+                prefetchDistance = 3,
+                initialLoadSize = perPage,
             ),
             pagingSourceFactory = {
                 PhotosPagingSource(

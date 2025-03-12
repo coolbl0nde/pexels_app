@@ -15,6 +15,7 @@ fun HorizontalListComponent(
     featuredCollection: ImmutableList<FeaturedCollection>,
     selectedItem: String,
     onSelectedItemChange: (String) -> Unit,
+    updatePhotos: () -> Unit,
 ) {
     LazyRow (
         modifier = modifier,
@@ -24,7 +25,10 @@ fun HorizontalListComponent(
             HorizontalListItem(
                 text = item.title,
                 isSelected = item.title == selectedItem,
-                onClick = { onSelectedItemChange(item.title) },
+                onClick = {
+                    onSelectedItemChange(item.title)
+                    updatePhotos()
+                },
             )
         }
     }

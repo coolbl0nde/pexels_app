@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,6 +17,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
@@ -47,7 +49,7 @@ fun HomeScreen (
         val featuredCollections by viewModel.collections.collectAsState()
         val selectedItem by viewModel.selectedItem.collectAsState()
 
-        val photos = viewModel.getSearchedPhotos().collectAsLazyPagingItems()
+        val photos = viewModel.searchedPhotos.collectAsLazyPagingItems()
 
         val imageList = listOf(
             R.drawable.picture_1,
@@ -82,11 +84,12 @@ fun HomeScreen (
             featuredCollection = featuredCollections.toPersistentList(),
             selectedItem = selectedItem,
             onSelectedItemChange = { viewModel.selectItem(it) },
+            updatePhotos = { viewModel.updatePhotos() },
         )
 
         Spacer(modifier = Modifier.height(14.dp))
 
-        /*when (photos.loadState.refresh) {
+        when (photos.loadState.refresh) {
             is LoadState.Error -> {
 
             }
@@ -111,19 +114,36 @@ fun HomeScreen (
                         end = 20.dp,
                     ),
                     photos = photos,
-                    scrollToTopTrigger = scrollToTopTrigger,
-                    onScrollToTopTrigger = { scrollToTopTrigger = it },
                 )
             }
-        }*/
+        }
+
+        when (photos.loadState.append) {
+            is LoadState.Error -> {
+                //TODO
+            }
+            is LoadState.Loading -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(text = "Pagination Loading")
+
+                    CircularProgressIndicator(color = Color.Black)
+                }
+            }
+            else -> {}
+        }
 
 
-        ImagesListComponent(
+        /*ImagesListComponent(
             modifier = Modifier.padding(
                 start = 20.dp,
                 end = 20.dp,
             ),
             photos = photos,
-        )
+        )*/
     }
 }

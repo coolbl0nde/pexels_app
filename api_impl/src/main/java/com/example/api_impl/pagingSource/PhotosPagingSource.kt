@@ -1,5 +1,6 @@
 package com.example.api_impl.pagingSource
 
+import android.util.Log
 import androidx.paging.PagingSource
 import androidx.paging.PagingState
 import com.example.api_impl.mapper.SearchPhotosResponseMapper
@@ -21,11 +22,12 @@ class PhotosPagingSource (
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
+            Log.d("tag", "${params.key}")
             val page = params.key ?: 1
             val searchedPhotosResponse = pexelsApi.getSearchedPhotos(
                 query = query,
                 page = page,
-                perPage = 30
+                perPage = params.loadSize
             )
 
             val searchedPhotos = searchPhotosResponseMapper.map(searchedPhotosResponse)

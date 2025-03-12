@@ -3,7 +3,6 @@ package com.example.feature.presentation.home.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.core.model.FeaturedCollection
@@ -14,10 +13,10 @@ import com.example.core.utils.empty
 import com.example.feature.presentation.home.domain.usecase.GetFeaturedCollectionsUseCase
 import com.example.feature.presentation.home.domain.usecase.GetSearchedPhotosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -33,22 +32,41 @@ class HomeViewModel @Inject constructor(
     private val _selectedItem = MutableStateFlow<String>(String.empty)
     val selectedItem: StateFlow<String> = _selectedItem.asStateFlow()
 
+    private val _searchedPhotos = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
+    val searchedPhotos = _searchedPhotos.asStateFlow()
+
     init {
-        initializeFeaturedCollections()
+        initializeHomeScreen()
     }
 
-    fun getSearchedPhotos(): Flow<PagingData<Photo>> {
+    fun updatePhotos() {
+        viewModelScope.launch {
+            Log.d("selected value2", "${_selectedItem.value}")
+            getSearchedPhotosUseCase(
+                query = _selectedItem.value,
+                perPage = 30
+            )
+                .cachedIn(viewModelScope)
+                .collectLatest { pagingData ->
+                    _searchedPhotos.value = pagingData
+                }
+        }
+    }
+
+    /*fun getSearchedPhotos(): Flow<PagingData<Photo>> {
         return getSearchedPhotosUseCase(
             query = _selectedItem.value,
             perPage = 30
         ).cachedIn(viewModelScope)
-    }
+    }*/
 
-    private fun initializeFeaturedCollections(){
+    private fun initializeHomeScreen(){
         viewModelScope.launch {
             updateFeaturedCollections()
 
             initSelectedItem(_collections.value)
+
+            updatePhotos()
         }
 
     }
@@ -64,6 +82,7 @@ class HomeViewModel @Inject constructor(
     private fun initSelectedItem(result: List<FeaturedCollection>){
         if (_selectedItem.value.isEmpty() && result.isNotEmpty()){
             _selectedItem.value = result.first().title
+            Log.d("init selected value", "${_selectedItem.value}")
         }
     }
 
