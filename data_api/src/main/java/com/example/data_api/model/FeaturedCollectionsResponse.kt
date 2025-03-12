@@ -3,11 +3,10 @@ package com.example.data_api.model
 data class FeaturedCollectionsResponse(
     val collections: List<CollectionItem>,
     val page: Int,
-    val perPage: Int,
-    val totalResults: Int,
-    val nextPage: String?,
-    val prevPage: String?,
-
+    val per_page: Int,
+    val total_results: Int,
+    val next_page: String?,
+    val prev_page: String?,
 )
 
 data class CollectionItem(
@@ -15,7 +14,7 @@ data class CollectionItem(
     val title: String,
     val description: String,
     val private: Boolean,
-    val mediaCount: Int,
-    val photosCount: Int,
-    val videosCount:Int,
+    val media_count: Int,
+    val photos_count: Int,
+    val videos_count:Int,
 )

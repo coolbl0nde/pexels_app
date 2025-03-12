@@ -1,13 +1,14 @@
 package com.example.feature.presentation.home.presentation.screen
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -18,6 +19,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
+import androidx.paging.LoadState
+import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.feature.R
 import com.example.feature.presentation.home.presentation.HomeViewModel
 import com.example.feature.presentation.home.presentation.component.HorizontalListComponent
@@ -43,6 +46,8 @@ fun HomeScreen (
 
         val featuredCollections by viewModel.collections.collectAsState()
         val selectedItem by viewModel.selectedItem.collectAsState()
+
+        val photos = viewModel.getSearchedPhotos().collectAsLazyPagingItems()
 
         val imageList = listOf(
             R.drawable.picture_1,
@@ -81,12 +86,44 @@ fun HomeScreen (
 
         Spacer(modifier = Modifier.height(14.dp))
 
+        /*when (photos.loadState.refresh) {
+            is LoadState.Error -> {
+
+            }
+            is LoadState.Loading -> {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                    verticalArrangement = Arrangement.Center,
+                ) {
+                    Text(
+                        modifier = Modifier
+                            .padding(8.dp),
+                        text = "Refresh Loading"
+                    )
+                }
+            }
+            else -> {
+                ImagesListComponent(
+                    modifier = Modifier.padding(
+                        start = 20.dp,
+                        end = 20.dp,
+                    ),
+                    photos = photos,
+                    scrollToTopTrigger = scrollToTopTrigger,
+                    onScrollToTopTrigger = { scrollToTopTrigger = it },
+                )
+            }
+        }*/
+
+
         ImagesListComponent(
             modifier = Modifier.padding(
                 start = 20.dp,
                 end = 20.dp,
             ),
-            imageList = imageList,
+            photos = photos,
         )
     }
 }

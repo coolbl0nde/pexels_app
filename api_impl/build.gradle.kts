@@ -44,6 +44,8 @@ dependencies {
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.okhttp3)
+    implementation(libs.androidx.paging.compose)
+    implementation(libs.androidx.paging.runtime)
     kapt(libs.dagger.hilt.android.compiler)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)

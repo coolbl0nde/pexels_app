@@ -1,14 +1,20 @@
 package com.example.feature.presentation.home.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.PagingData
+import androidx.paging.cachedIn
 import com.example.core.model.FeaturedCollection
+import com.example.core.model.Photo
 import com.example.core.utils.AMOUNT_OF_PAGE_FEATURED_COLLECTIONS
 import com.example.core.utils.AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS
 import com.example.core.utils.empty
 import com.example.feature.presentation.home.domain.usecase.GetFeaturedCollectionsUseCase
+import com.example.feature.presentation.home.domain.usecase.GetSearchedPhotosUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -17,7 +23,8 @@ import javax.inject.Inject
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
-    private val getFeaturedCollectionsUseCase: GetFeaturedCollectionsUseCase
+    private val getFeaturedCollectionsUseCase: GetFeaturedCollectionsUseCase,
+    private val getSearchedPhotosUseCase: GetSearchedPhotosUseCase,
 ): ViewModel() {
 
     private val _collections = MutableStateFlow<List<FeaturedCollection>>(emptyList())
@@ -28,6 +35,13 @@ class HomeViewModel @Inject constructor(
 
     init {
         initializeFeaturedCollections()
+    }
+
+    fun getSearchedPhotos(): Flow<PagingData<Photo>> {
+        return getSearchedPhotosUseCase(
+            query = _selectedItem.value,
+            perPage = 30
+        ).cachedIn(viewModelScope)
     }
 
     private fun initializeFeaturedCollections(){

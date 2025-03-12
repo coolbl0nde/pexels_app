@@ -1,6 +1,7 @@
 package com.example.api_impl
 
 import com.example.api_impl.mapper.FeaturedCollectionResponseMapper
+import com.example.api_impl.mapper.SearchPhotosResponseMapper
 import com.example.api_impl.repository.PexelsRepositoryImpl
 import com.example.core.utils.BASE_URL
 import com.example.data_api.BuildConfig
@@ -73,19 +74,18 @@ object NetworkModule {
         return retrofit.create(PexelsApi::class.java)
     }
 
-    fun provideFeaturedCollectionResponseMapper(): FeaturedCollectionResponseMapper{
-        return FeaturedCollectionResponseMapper()
-    }
 
     @Provides
     @Singleton
     fun providePexelsRepository(
         pexelsApi: PexelsApi,
-        mapper: FeaturedCollectionResponseMapper,
+        featuredCollectionMapper: FeaturedCollectionResponseMapper,
+        searchPhotosMapper: SearchPhotosResponseMapper,
     ): PexelsRepository {
         return PexelsRepositoryImpl(
             pexelsApi = pexelsApi,
-            mapper = mapper
+            featuredCollectionMapper = featuredCollectionMapper,
+            searchedPhotosMapper = searchPhotosMapper,
         )
     }
 

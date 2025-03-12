@@ -11,9 +11,9 @@ class FeaturedCollectionResponseMapper @Inject constructor() {
             FeaturedCollection(
                 id = dto.id,
                 title = dto.title,
-                mediaCount = dto.mediaCount,
-                photosCount = dto.photosCount,
-                videosCount = dto.videosCount,
+                mediaCount = dto.media_count,
+                photosCount = dto.photos_count,
+                videosCount = dto.videos_count,
             )
         }
     }
