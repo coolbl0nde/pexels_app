@@ -53,13 +53,6 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    /*fun getSearchedPhotos(): Flow<PagingData<Photo>> {
-        return getSearchedPhotosUseCase(
-            query = _selectedItem.value,
-            perPage = 30
-        ).cachedIn(viewModelScope)
-    }*/
-
     private fun initializeHomeScreen(){
         viewModelScope.launch {
             updateFeaturedCollections()

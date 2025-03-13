@@ -7,6 +7,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import com.example.core.model.FeaturedCollection
+import com.example.core.utils.empty
 import kotlinx.collections.immutable.ImmutableList
 
 @Composable
@@ -16,6 +17,7 @@ fun HorizontalListComponent(
     selectedItem: String,
     onSelectedItemChange: (String) -> Unit,
     updatePhotos: () -> Unit,
+    onTextChange: (String) -> Unit,
 ) {
     LazyRow (
         modifier = modifier,
@@ -24,8 +26,9 @@ fun HorizontalListComponent(
         items(featuredCollection) { item ->
             HorizontalListItem(
                 text = item.title,
-                isSelected = item.title == selectedItem,
+                isSelected = item.title.lowercase() == selectedItem.lowercase(),
                 onClick = {
+                    onTextChange(String.empty)
                     onSelectedItemChange(item.title)
                     updatePhotos()
                 },

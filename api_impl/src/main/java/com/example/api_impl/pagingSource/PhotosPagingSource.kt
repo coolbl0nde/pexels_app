@@ -24,7 +24,6 @@ class PhotosPagingSource (
 
     override suspend fun load(params: LoadParams<Int>): LoadResult<Int, Photo> {
         return try {
-            Log.d("tag", "${params.key}")
             val page = params.key ?: 1
             val searchedPhotosResponse = pexelsApi.getSearchedPhotos(
                 query = query,
@@ -34,14 +33,17 @@ class PhotosPagingSource (
 
             val searchedPhotos = searchPhotosResponseMapper.map(searchedPhotosResponse)
 
+            Log.d("tag", "${searchedPhotos}")
+
+
             LoadResult.Page(
                 data = searchedPhotos.photos,
                 prevKey = if (page == 1) null else page - 1,
                 nextKey = if (searchedPhotos.photos.isEmpty()) null else page + 1
             )
         } catch (e: Exception) {
+            Log.d("tag", "${e.toString()}")
             LoadResult.Error(e)
         }
     }
-
 }

@@ -16,7 +16,7 @@ data class PhotoResponse(
     val url: String,
     val photographer: String,
     val photographer_url: String,
-    val photographer_id: Int,
+    val photographer_id: Long,
     val avg_color: String,
     val src: Src,
     val liked: Boolean,

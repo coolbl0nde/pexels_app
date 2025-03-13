@@ -1,8 +1,6 @@
 package com.example.feature.presentation.home.presentation.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -10,11 +8,9 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -24,13 +20,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.feature.R
+import com.example.core.utils.empty
 import com.example.feature.presentation.home.presentation.HomeViewModel
+import com.example.feature.presentation.home.presentation.component.EmptyStateComponent
 import com.example.feature.presentation.home.presentation.component.HorizontalListComponent
 import com.example.feature.presentation.home.presentation.component.ImagesListComponent
 import com.example.feature.presentation.home.presentation.component.SearchBarComponent
@@ -45,9 +43,6 @@ fun HomeScreen (
         modifier = Modifier.fillMaxSize(),
     ) {
 
-        var expanded by remember {
-            mutableStateOf(false)
-        }
         var text by remember {
             mutableStateOf("")
         }
@@ -57,6 +52,8 @@ fun HomeScreen (
 
         val photos = viewModel.searchedPhotos.collectAsLazyPagingItems()
 
+        val focusManager = LocalFocusManager.current
+
         SearchBarComponent(
             modifier = Modifier
                 .padding(
@@ -65,10 +62,12 @@ fun HomeScreen (
                     top = 10.dp,
                 )
                 .fillMaxWidth(),
-            expanded = expanded,
-            onExpandedChange = { expanded = it },
             text = text,
             onTextChange = { text = it },
+            onSearch = {
+                viewModel.selectItem(it)
+                viewModel.updatePhotos()
+            },
         )
 
         Spacer(modifier = Modifier.height(14.dp))
@@ -81,8 +80,12 @@ fun HomeScreen (
                 ),
                 featuredCollection = featuredCollections.toPersistentList(),
                 selectedItem = selectedItem,
-                onSelectedItemChange = { viewModel.selectItem(it) },
+                onSelectedItemChange = {
+                    viewModel.selectItem(it)
+                    focusManager.clearFocus()
+                },
                 updatePhotos = { viewModel.updatePhotos() },
+                onTextChange = { text = it }
             )
 
             Spacer(modifier = Modifier.height(14.dp))
@@ -91,7 +94,19 @@ fun HomeScreen (
 
         when (photos.loadState.refresh) {
             is LoadState.Error -> {
+                val error = (photos.loadState.refresh as LoadState.Error).error
 
+                if (error is NullPointerException) {
+                    EmptyStateComponent(
+                        onSearch = {
+                            viewModel.selectItem(featuredCollections.first().title)
+                            viewModel.updatePhotos()
+                        },
+                        onTextChange = { text = String.empty },
+                    )
+                } else {
+                    //TODO
+                }
             }
             is LoadState.Loading -> {
                 Row(
@@ -117,32 +132,21 @@ fun HomeScreen (
             }
         }
 
-        when (photos.loadState.append) {
+        /*when (photos.loadState.append) {
             is LoadState.Error -> {
                 //TODO
             }
             is LoadState.Loading -> {
-                Column(
+                Column (
                     modifier = Modifier
                         .fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Center,
+                    verticalArrangement = Arrangement.Bottom,
                 ) {
-                    Text(text = "Pagination Loading")
-
-                    CircularProgressIndicator(color = Color.Black)
+                    CircularProgressIndicator()
                 }
             }
             else -> {}
-        }
-
-
-        /*ImagesListComponent(
-            modifier = Modifier.padding(
-                start = 20.dp,
-                end = 20.dp,
-            ),
-            photos = photos,
-        )*/
+        }*/
     }
 }
