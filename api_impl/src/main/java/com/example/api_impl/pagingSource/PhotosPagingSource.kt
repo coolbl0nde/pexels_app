@@ -14,11 +14,6 @@ class PhotosPagingSource (
 ): PagingSource<Int, Photo>() {
 
     override fun getRefreshKey(state: PagingState<Int, Photo>): Int? {
-        /*return state.anchorPosition?.let { anchorPosition ->
-            state.closestPageToPosition(anchorPosition)?.prevKey?.plus(1)
-                ?: state.closestPageToPosition(anchorPosition)?.nextKey?.minus(1)
-        }*/
-
         return state.anchorPosition
     }
 
@@ -33,16 +28,13 @@ class PhotosPagingSource (
 
             val searchedPhotos = searchPhotosResponseMapper.map(searchedPhotosResponse)
 
-            Log.d("tag", "${searchedPhotos}")
-
-
             LoadResult.Page(
                 data = searchedPhotos.photos,
                 prevKey = if (page == 1) null else page - 1,
                 nextKey = if (searchedPhotos.photos.isEmpty()) null else page + 1
             )
         } catch (e: Exception) {
-            Log.d("tag", "${e.toString()}")
+            Log.d("tag", "${e}")
             LoadResult.Error(e)
         }
     }

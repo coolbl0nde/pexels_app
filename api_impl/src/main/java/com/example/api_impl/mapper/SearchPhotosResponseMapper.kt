@@ -14,10 +14,10 @@ class SearchPhotosResponseMapper @Inject constructor(
                 photoResponseMapper.map(photoResponse)
             },
             page = response.page,
-            perPage = response.per_page,
-            totalResults = response.total_results,
-            prevPage = response.prev_page,
-            nextPage = response.next_page,
+            perPage = response.perPage,
+            totalResults = response.totalResults,
+            prevPage = response.prevPage,
+            nextPage = response.nextPage,
         )
     }
 }

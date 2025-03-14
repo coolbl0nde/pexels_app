@@ -82,4 +82,12 @@ class HomeViewModel @Inject constructor(
         _selectedItem.value = title
     }
 
+    fun onSearchRequest(text: String){
+        _selectedItem.value = text
+    }
+
+    fun retryFetchData(){
+        initializeHomeScreen()
+    }
+
 }

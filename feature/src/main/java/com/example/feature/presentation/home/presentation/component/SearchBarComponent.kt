@@ -1,5 +1,6 @@
 package com.example.feature.presentation.home.presentation.component
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.Box
@@ -18,6 +19,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import com.example.core.utils.SEARCH_DEBOUNCE_DELAY
 import com.example.core.utils.empty
 import com.example.feature.R
 import kotlinx.coroutines.delay
@@ -38,7 +40,7 @@ fun SearchBarComponent(
 
     LaunchedEffect(key1 = text) {
         if (text.isNotEmpty()) {
-            delay(  500)
+            delay(SEARCH_DEBOUNCE_DELAY)
             onSearch(text)
         }
     }

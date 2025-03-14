@@ -1,6 +1,7 @@
 package com.example.feature.presentation.home.presentation.screen
 
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -31,8 +32,10 @@ import com.example.feature.presentation.home.presentation.HomeViewModel
 import com.example.feature.presentation.home.presentation.component.EmptyStateComponent
 import com.example.feature.presentation.home.presentation.component.HorizontalListComponent
 import com.example.feature.presentation.home.presentation.component.ImagesListComponent
+import com.example.feature.presentation.home.presentation.component.NetworkStubComponent
 import com.example.feature.presentation.home.presentation.component.SearchBarComponent
 import kotlinx.collections.immutable.toPersistentList
+import okio.IOException
 
 @Composable
 fun HomeScreen (
@@ -54,6 +57,10 @@ fun HomeScreen (
 
         val focusManager = LocalFocusManager.current
 
+        var isLoading by remember {
+            mutableStateOf(false)
+        }
+
         SearchBarComponent(
             modifier = Modifier
                 .padding(
@@ -65,7 +72,7 @@ fun HomeScreen (
             text = text,
             onTextChange = { text = it },
             onSearch = {
-                viewModel.selectItem(it)
+                viewModel.onSearchRequest(it)
                 viewModel.updatePhotos()
             },
         )
@@ -74,10 +81,7 @@ fun HomeScreen (
 
         if (featuredCollections.isNotEmpty()) {
             HorizontalListComponent(
-                modifier = Modifier.padding(
-                    start = 20.dp,
-                    end = 20.dp,
-                ),
+                modifier = Modifier.padding( horizontal = 20.dp ),
                 featuredCollection = featuredCollections.toPersistentList(),
                 selectedItem = selectedItem,
                 onSelectedItemChange = {
@@ -91,62 +95,69 @@ fun HomeScreen (
             Spacer(modifier = Modifier.height(14.dp))
         }
 
+        Box ( modifier = Modifier.weight(1f) ) {
+            when (photos.loadState.refresh) {
+                is LoadState.Error -> {
+                    val error = (photos.loadState.refresh as LoadState.Error).error
 
-        when (photos.loadState.refresh) {
-            is LoadState.Error -> {
-                val error = (photos.loadState.refresh as LoadState.Error).error
-
-                if (error is NullPointerException) {
-                    EmptyStateComponent(
-                        onSearch = {
-                            viewModel.selectItem(featuredCollections.first().title)
-                            viewModel.updatePhotos()
-                        },
-                        onTextChange = { text = String.empty },
-                    )
-                } else {
-                    //TODO
+                    if (error is NullPointerException) {
+                        EmptyStateComponent(
+                            onSearch = {
+                                viewModel.selectItem(featuredCollections.first().title)
+                                viewModel.updatePhotos()
+                            },
+                            onTextChange = { text = String.empty },
+                        )
+                    } else if (error is IOException){
+                        NetworkStubComponent(
+                            onTryAgain = { viewModel.retryFetchData() }
+                        )
+                    } else {
+                        //TODO
+                    }
                 }
-            }
-            is LoadState.Loading -> {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth(),
-                    verticalAlignment = Alignment.Top,
-                ) {
-                    LinearProgressIndicator(
+                is LoadState.Loading -> {
+                    Row(
                         modifier = Modifier
                             .fillMaxWidth(),
-                        trackColor = MaterialTheme.colorScheme.surface,
+                        verticalAlignment = Alignment.Top,
+                    ) {
+                        LinearProgressIndicator(
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            trackColor = MaterialTheme.colorScheme.surface,
+                        )
+                    }
+                }
+                else -> {
+                    ImagesListComponent(
+                        modifier = Modifier.padding( horizontal = 20.dp ),
+                        photos = photos,
                     )
                 }
-            }
-            else -> {
-                ImagesListComponent(
-                    modifier = Modifier.padding(
-                        start = 20.dp,
-                        end = 20.dp,
-                    ),
-                    photos = photos,
-                )
             }
         }
 
-        /*when (photos.loadState.append) {
+
+
+        when (photos.loadState.append) {
             is LoadState.Error -> {
                 //TODO
             }
             is LoadState.Loading -> {
-                Column (
+                Row (
                     modifier = Modifier
-                        .fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.Bottom,
+                        .fillMaxWidth()
+                        .padding(top = 15.dp),
+                    verticalAlignment = Alignment.Bottom,
                 ) {
-                    CircularProgressIndicator()
+                    LinearProgressIndicator(
+                        modifier = Modifier.fillMaxWidth(),
+                        trackColor = MaterialTheme.colorScheme.surface,
+                    )
                 }
             }
-            else -> {}
-        }*/
+            else -> { }
+        }
     }
 }
