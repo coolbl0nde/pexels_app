@@ -1,11 +1,16 @@
-package com.example.api_impl
+package com.example.api_impl.module
 
-import com.example.api_impl.mapper.FeaturedCollectionResponseMapper
-import com.example.api_impl.mapper.SearchPhotosResponseMapper
+import com.example.api_impl.bd.PexelsDatabase
+import com.example.api_impl.mapper.CollectionEntityToDomainMapper
+import com.example.api_impl.mapper.CollectionResponseToEntityMapper
+import com.example.api_impl.mapper.PhotoEntityToPhotoMapper
+import com.example.api_impl.mapper.SearchPhotoResponseToEntityMapper
 import com.example.api_impl.repository.PexelsRepositoryImpl
 import com.example.core.utils.BASE_URL
 import com.example.data_api.BuildConfig
 import com.example.data_api.api.PexelsApi
+import com.example.data_api.dao.FeaturedCollectionDao
+import com.example.data_api.dao.PhotoDao
 import com.example.data_api.repository.PexelsRepository
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
@@ -79,13 +84,23 @@ object NetworkModule {
     @Singleton
     fun providePexelsRepository(
         pexelsApi: PexelsApi,
-        featuredCollectionMapper: FeaturedCollectionResponseMapper,
-        searchPhotosMapper: SearchPhotosResponseMapper,
+        collectionResponseToEntityMapper: CollectionResponseToEntityMapper,
+        collectionEntityToDomainMapper: CollectionEntityToDomainMapper,
+        searchPhotosMapper: SearchPhotoResponseToEntityMapper,
+        photoEntityToPhotoMapper: PhotoEntityToPhotoMapper,
+        database: PexelsDatabase,
+        photoDao: PhotoDao,
+        featuredCollectionDao: FeaturedCollectionDao,
     ): PexelsRepository {
         return PexelsRepositoryImpl(
             pexelsApi = pexelsApi,
-            featuredCollectionMapper = featuredCollectionMapper,
-            searchedPhotosMapper = searchPhotosMapper,
+            collectionResponseToEntityMapper = collectionResponseToEntityMapper,
+            collectionEntityToDomainMapper = collectionEntityToDomainMapper,
+            searchPhotoToEntityMapper = searchPhotosMapper,
+            photoEntityToPhotoMapper = photoEntityToPhotoMapper,
+            database = database,
+            photoDao = photoDao,
+            featuredCollectionDao = featuredCollectionDao,
         )
     }
 

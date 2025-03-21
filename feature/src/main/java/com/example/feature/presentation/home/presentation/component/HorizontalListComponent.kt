@@ -2,37 +2,49 @@ package com.example.feature.presentation.home.presentation.component
 
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
-import com.example.core.model.FeaturedCollection
+import androidx.paging.compose.LazyPagingItems
 import com.example.core.utils.empty
-import kotlinx.collections.immutable.ImmutableList
+import com.example.feature.presentation.home.presentation.model.FeaturedCollectionUi
 
 @Composable
 fun HorizontalListComponent(
     modifier: Modifier = Modifier,
-    featuredCollection: ImmutableList<FeaturedCollection>,
+    featuredCollections: LazyPagingItems<FeaturedCollectionUi>,
     selectedItem: String,
-    onSelectedItemChange: (String) -> Unit,
-    updatePhotos: () -> Unit,
+    onSelectedItemChange: (Int) -> Unit,
     onTextChange: (String) -> Unit,
 ) {
+
+    /*LaunchedEffect(key1 = featuredCollections.itemCount) {
+        if (featuredCollections.itemCount > 0 && selectedItem.isEmpty()) {
+            featuredCollections[0]?.let { firstItem ->
+                onSelectedItemChange(firstItem.title)
+            }
+        }
+    }*/
+
     LazyRow (
         modifier = modifier,
         horizontalArrangement = Arrangement.spacedBy(8.dp),
     ) {
-        items(featuredCollection) { item ->
-            HorizontalListItem(
-                text = item.title,
-                isSelected = item.title.lowercase() == selectedItem.lowercase(),
-                onClick = {
-                    onTextChange(String.empty)
-                    onSelectedItemChange(item.title)
-                    updatePhotos()
-                },
-            )
+        items(featuredCollections.itemCount) { index ->
+            val featuredCollection = featuredCollections[index]
+
+            featuredCollection?.let {
+
+                HorizontalListItem(
+                    text = featuredCollection.title,
+                    isSelected = featuredCollection.isSelected,/*featuredCollection.title == selectedItem*/
+                    onClick = {
+                        onTextChange(String.empty)
+                        onSelectedItemChange(featuredCollection.index)
+                    },
+                )
+            }
         }
     }
 }

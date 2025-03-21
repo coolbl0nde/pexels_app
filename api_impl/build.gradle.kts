@@ -1,7 +1,7 @@
 plugins {
     alias(libs.plugins.android.library)
     alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.kapt)
+    alias(libs.plugins.devtools.ksp)
 }
 
 android {
@@ -46,12 +46,12 @@ dependencies {
     implementation(libs.okhttp3)
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.paging.runtime)
-    kapt(libs.dagger.hilt.android.compiler)
+    ksp(libs.dagger.hilt.android.compiler)
+    implementation(libs.room.runtime)
+    ksp(libs.room.compiler)
+    implementation(libs.room.ktx)
+    implementation(libs.room.paging)
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)
-}
-
-kapt {
-    correctErrorTypes = true
 }

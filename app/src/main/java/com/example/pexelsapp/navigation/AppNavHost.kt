@@ -17,7 +17,7 @@ fun AppNavHost(
     NavHost(
         modifier = modifier,
         navController = navController,
-        startDestination = Home,
+        startDestination = Home
     ){
         composable<Home>{
             HomeScreen(navController)

@@ -1,35 +1,57 @@
 package com.example.api_impl.repository
 
-import android.util.Log
+import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
 import androidx.paging.PagingData
-import com.example.api_impl.mapper.FeaturedCollectionResponseMapper
-import com.example.api_impl.mapper.SearchPhotosResponseMapper
-import com.example.api_impl.pagingSource.PhotosPagingSource
+import androidx.paging.map
+import com.example.api_impl.bd.PexelsDatabase
+import com.example.api_impl.mapper.CollectionEntityToDomainMapper
+import com.example.api_impl.mapper.CollectionResponseToEntityMapper
+import com.example.api_impl.mapper.PhotoEntityToPhotoMapper
+import com.example.api_impl.mapper.SearchPhotoResponseToEntityMapper
+import com.example.api_impl.remoteMediator.FeaturedCollectionsRemoteMediator
+import com.example.api_impl.remoteMediator.PhotoRemoteMediator
 import com.example.core.model.FeaturedCollection
 import com.example.core.model.Photo
-import com.example.core.model.SearchPhotos
-import com.example.core.utils.PREFETCH_DISTANCE
+import com.example.core.utils.PREFETCH_DISTANCE_PHOTO
 import com.example.data_api.api.PexelsApi
+import com.example.data_api.dao.FeaturedCollectionDao
+import com.example.data_api.dao.PhotoDao
 import com.example.data_api.repository.PexelsRepository
 import kotlinx.coroutines.flow.Flow
-import okio.IOException
+import kotlinx.coroutines.flow.map
 import javax.inject.Inject
 
+@OptIn(ExperimentalPagingApi::class)
 class PexelsRepositoryImpl @Inject constructor(
     private val pexelsApi: PexelsApi,
-    private val featuredCollectionMapper: FeaturedCollectionResponseMapper,
-    private val searchedPhotosMapper: SearchPhotosResponseMapper,
+    private val collectionResponseToEntityMapper: CollectionResponseToEntityMapper,
+    private val collectionEntityToDomainMapper: CollectionEntityToDomainMapper,
+    private val searchPhotoToEntityMapper: SearchPhotoResponseToEntityMapper,
+    private val photoEntityToPhotoMapper: PhotoEntityToPhotoMapper,
+    private val photoDao: PhotoDao,
+    private val featuredCollectionDao: FeaturedCollectionDao,
+    private val database: PexelsDatabase,
 ): PexelsRepository {
 
-    override suspend fun getFeaturedCollections(page: Int, perPage: Int): List<FeaturedCollection> {
-        try {
-            val response = pexelsApi.getFeaturedCollections(page, perPage)
-
-            return featuredCollectionMapper.map(response)
-        } catch (e: Exception) {
-            return emptyList()
+    override fun getFeaturedCollections(perPage: Int): Flow<PagingData<FeaturedCollection>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = perPage,
+                initialLoadSize = perPage,
+                prefetchDistance = PREFETCH_DISTANCE_PHOTO,
+            ),
+            remoteMediator = FeaturedCollectionsRemoteMediator(
+                api = pexelsApi,
+                database = database,
+                collectionResponseToEntityMapper = collectionResponseToEntityMapper,
+            ),
+            pagingSourceFactory = { featuredCollectionDao.getFeaturedCollections() }
+        ).flow.map { pagingData ->
+            pagingData.map { collectionEntity ->
+                collectionEntityToDomainMapper.map(collectionEntity)
+            }
         }
     }
 
@@ -37,16 +59,20 @@ class PexelsRepositoryImpl @Inject constructor(
         return Pager(
             config = PagingConfig(
                 pageSize = perPage,
-                prefetchDistance = PREFETCH_DISTANCE,
+                prefetchDistance = PREFETCH_DISTANCE_PHOTO,
                 initialLoadSize = perPage,
             ),
-            pagingSourceFactory = {
-                PhotosPagingSource(
-                    pexelsApi = pexelsApi,
-                    query = query,
-                    searchPhotosResponseMapper = searchedPhotosMapper,
-                )
+            remoteMediator = PhotoRemoteMediator(
+                query = query,
+                api = pexelsApi,
+                database = database,
+                photoToEntityMapper = searchPhotoToEntityMapper,
+            ),
+            pagingSourceFactory = { photoDao.getPhotosByQuery(query) }
+        ).flow.map { pagingData ->
+            pagingData.map { photoEntity ->
+                photoEntityToPhotoMapper.map(photoEntity)
             }
-        ).flow
+        }
     }
 }

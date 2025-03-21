@@ -10,7 +10,7 @@ data class SearchPhotos(
 )
 
 data class Photo(
-    val id: Int,
+    val id: Long,
     val width: Int,
     val height: Int,
     val url: String,

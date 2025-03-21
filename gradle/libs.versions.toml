@@ -22,6 +22,8 @@ kotlinx-collections-immutable = "0.3.8"
 paging-runtime = "3.1.1"
 paging-compose = "1.0.0-alpha17"
 coil3 = "3.1.0"
+ksp = "2.0.21-1.0.27"
+room-version = "2.6.1"
 
 
 [libraries]
@@ -54,13 +56,17 @@ androidx-paging-runtime = { group = "androidx.paging", name = "paging-runtime", 
 androidx-paging-compose = { group = "androidx.paging", name = "paging-compose", version.ref = "paging-compose"}
 coil-compose = { group = "io.coil-kt.coil3", name = "coil-compose", version.ref = "coil3"}
 coil-network-okhttp = { group = "io.coil-kt.coil3", name = "coil-network-okhttp", version.ref = "coil3"}
+room-runtime = { group = "androidx.room", name = "room-runtime", version.ref = "room-version" }
+room-compiler = { group = "androidx.room", name = "room-compiler", version.ref = "room-version" }
+room-ktx = { group = "androidx.room", name = "room-ktx", version.ref = "room-version" }
+room-paging = { group = "androidx.room", name = "room-paging", version.ref = "room-version" }
 
 
 [plugins]
 android-application = {id = "com.android.application", version.ref = "androidGradlePlugin" }
-android-library = {id = "com.android.library", version.ref = "androidGradlePlugin"}
-kotlin-android = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin"}
+android-library = {id = "com.android.library", version.ref = "androidGradlePlugin" }
+kotlin-android = {id = "org.jetbrains.kotlin.android", version.ref = "kotlin" }
 compose-compiler = { id = "org.jetbrains.kotlin.plugin.compose", version.ref = "kotlin" }
 kotlin-serialization = { id = "org.jetbrains.kotlin.plugin.serialization", version.ref = "kotlin-serialization" }
-dagger-hilt-android = {id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt"}
-kotlin-kapt = {id = "kotlin-kapt"}
+dagger-hilt-android = { id = "com.google.dagger.hilt.android", version.ref = "dagger-hilt" }
+devtools-ksp = { id = "com.google.devtools.ksp", version.ref = "ksp" }
