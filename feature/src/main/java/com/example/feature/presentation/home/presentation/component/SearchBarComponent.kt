@@ -40,8 +40,6 @@ fun SearchBarComponent(
 
     LaunchedEffect(key1 = text) {
         if (text.isNotEmpty()) {
-            Log.d("tag", "${text}")
-
             delay(SEARCH_DEBOUNCE_DELAY)
             onSearch(text)
         }

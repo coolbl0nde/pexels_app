@@ -71,7 +71,6 @@ fun HomeScreen (
 
         LaunchedEffect(key1 = selectedItem) {
             if (selectedItem.isNotEmpty()) {
-                //Log.d("tag", "${selectedItem}")
                 viewModel.updatePhotos()
             }
         }
@@ -89,7 +88,6 @@ fun HomeScreen (
             onSearch = {
                 viewModel.updateSelectedItem(NO_ONE_FEATURED_COLLECTION_SELECTED)
                 viewModel.onSearchRequest(it)
-                viewModel.updatePhotos()
             },
         )
 
