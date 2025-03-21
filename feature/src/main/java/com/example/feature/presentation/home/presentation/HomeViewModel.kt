@@ -49,6 +49,8 @@ class HomeViewModel @Inject constructor(
 
     fun updatePhotos() {
         viewModelScope.launch {
+            Log.d("tag", "${_selectedItem.value}")
+
             getSearchedPhotosUseCase(
                 query = _selectedItem.value,
                 perPage = AMOUNT_OF_PER_PAGE_PHOTOS

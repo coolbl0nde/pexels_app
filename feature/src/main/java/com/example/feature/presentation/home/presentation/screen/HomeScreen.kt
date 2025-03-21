@@ -58,9 +58,6 @@ fun HomeScreen (
 
         val featuredCollections = viewModel.collections.collectAsLazyPagingItems()
         val selectedItem by viewModel.selectedItem.collectAsState()
-        var prevSelectedIndex by remember {
-            mutableStateOf(0)
-        }
 
         val photos = viewModel.searchedPhotos.collectAsLazyPagingItems()
 
@@ -74,7 +71,7 @@ fun HomeScreen (
 
         LaunchedEffect(key1 = selectedItem) {
             if (selectedItem.isNotEmpty()) {
-                Log.d("tag", "${selectedItem}")
+                //Log.d("tag", "${selectedItem}")
                 viewModel.updatePhotos()
             }
         }
@@ -112,7 +109,6 @@ fun HomeScreen (
                     selectedItem = selectedItem,
                     onSelectedItemChange = {
                         viewModel.updateSelectedItem(it)
-                        viewModel.updatePhotos()
                         focusManager.clearFocus()
                     },
                     onTextChange = { text = it }
