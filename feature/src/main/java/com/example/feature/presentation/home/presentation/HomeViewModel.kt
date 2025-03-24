@@ -3,11 +3,11 @@ package com.example.feature.presentation.home.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import androidx.paging.ItemSnapshotList
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
 import com.example.core.model.FeaturedCollection
 import com.example.core.model.Photo
-import com.example.core.utils.AMOUNT_OF_PAGE_FEATURED_COLLECTIONS
 import com.example.core.utils.AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS
 import com.example.core.utils.AMOUNT_OF_PER_PAGE_PHOTOS
 import com.example.core.utils.empty
@@ -17,33 +17,36 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+
 
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getFeaturedCollectionsUseCase: GetFeaturedCollectionsUseCase,
     private val getSearchedPhotosUseCase: GetSearchedPhotosUseCase,
-): ViewModel() {
+) : ViewModel() {
 
-    private val _collections = MutableStateFlow<List<FeaturedCollection>>(emptyList())
-    val collections: StateFlow<List<FeaturedCollection>> = _collections.asStateFlow()
+    private val _collections = MutableStateFlow<PagingData<FeaturedCollection>>(PagingData.empty())
+    val collections: StateFlow<PagingData<FeaturedCollection>> = _collections.asStateFlow()
 
-    private val _selectedItem = MutableStateFlow<String>(String.empty)
-    val selectedItem: StateFlow<String> = _selectedItem.asStateFlow()
+    private val _searchValue = MutableStateFlow(String.empty)
+    val searchValue: StateFlow<String> = _searchValue.asStateFlow()
 
     private val _searchedPhotos = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
     val searchedPhotos = _searchedPhotos.asStateFlow()
 
     init {
-        initializeHomeScreen()
+        viewModelScope.launch {
+            updateFeaturedCollections()
+            updatePhotos()
+        }
     }
 
     fun updatePhotos() {
         viewModelScope.launch {
             getSearchedPhotosUseCase(
-                query = _selectedItem.value,
+                query = _searchValue.value,
                 perPage = AMOUNT_OF_PER_PAGE_PHOTOS
             )
                 .cachedIn(viewModelScope)
@@ -53,41 +56,33 @@ class HomeViewModel @Inject constructor(
         }
     }
 
-    private fun initializeHomeScreen(){
+    private fun updateFeaturedCollections() {
         viewModelScope.launch {
-            updateFeaturedCollections()
-
-            initSelectedItem(_collections.value)
-
-            updatePhotos()
-        }
-
-    }
-
-    private suspend fun updateFeaturedCollections(){
-        val result = getFeaturedCollectionsUseCase(
-            page = AMOUNT_OF_PAGE_FEATURED_COLLECTIONS,
-            perPage = AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS,
-        )
-        _collections.value = result
-    }
-
-    private fun initSelectedItem(result: List<FeaturedCollection>){
-        if (_selectedItem.value.isEmpty() && result.isNotEmpty()){
-            _selectedItem.value = result.first().title
+            getFeaturedCollectionsUseCase(
+                perPage = AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS
+            )
+                .cachedIn(viewModelScope)
+                .collect { pagingData ->
+                    _collections.value = pagingData
+                }
         }
     }
 
-    fun selectItem(title: String) {
-        _selectedItem.value = title
+    fun setSearchValue(text: String) {
+        _searchValue.value = text
     }
 
-    fun onSearchRequest(text: String){
-        _selectedItem.value = text
+    fun resetSearchValue(featuredCollections: ItemSnapshotList<FeaturedCollection>) {
+        if (featuredCollections.isNotEmpty()) {
+            val firstItem = featuredCollections.first()?.title
+
+            if (firstItem !== null) {
+                setSearchValue(firstItem)
+            }
+        }
     }
 
-    fun retryFetchData(){
-        initializeHomeScreen()
+    fun retryFetchData() {
+        updateFeaturedCollections()
     }
-
 }

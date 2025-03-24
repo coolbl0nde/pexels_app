@@ -1,5 +1,6 @@
 package com.example.feature.presentation.home.presentation.component
 
+import android.util.Log
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.aspectRatio
@@ -16,11 +17,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.ColorPainter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.paging.LoadState
 import androidx.paging.compose.LazyPagingItems
 import coil3.compose.AsyncImage
+import coil3.request.CachePolicy
+import coil3.request.ImageRequest
 import com.example.core.model.Photo
+import com.example.data_api.entity.PhotoEntity
 
 @Composable
 fun ImagesListComponent(
@@ -49,7 +54,8 @@ fun ImagesListComponent(
                         model = photo.original,
                         contentDescription = null,
                         contentScale = ContentScale.Crop,
-                        placeholder = ColorPainter(MaterialTheme.colorScheme.surface)
+                        placeholder = ColorPainter(MaterialTheme.colorScheme.surface),
+                        error = ColorPainter(MaterialTheme.colorScheme.surface),
                     )
                 }
             }

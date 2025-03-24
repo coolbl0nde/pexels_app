@@ -12,7 +12,7 @@ data class SearchPhotosResponse(
 )
 
 data class PhotoResponse(
-    @SerializedName("id") val id: Int,
+    @SerializedName("id") val id: Long,
     @SerializedName("width") val width: Int,
     @SerializedName("height") val height: Int,
     @SerializedName("url") val url: String,

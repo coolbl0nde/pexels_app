@@ -1,5 +1,6 @@
 package com.example.pexelsapp.navigation
 
+import android.util.Log
 import androidx.compose.animation.core.LinearOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.tween
@@ -25,6 +26,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.core.utils.TAB_SELECTOR_ANIMATION_DURATION
@@ -60,17 +64,18 @@ fun BottomNavigationBar(
     val navBackStackEntry by navController.currentBackStackEntryAsState()
     val currentDestination = navBackStackEntry?.destination
 
-    var selectedItem by remember {
-        mutableIntStateOf(0)
-    }
 
     NavigationBar (
         modifier = Modifier.height(64.dp),
     ) {
-        topLevelRoutes.forEachIndexed { index, topLevelRoute ->
+        topLevelRoutes.forEach { topLevelRoute ->
+
+            val selected = currentDestination?.hierarchy?.any {
+                it.hasRoute(route = topLevelRoute.route::class)
+            } == true
 
             val indicatorWidth by animateDpAsState(
-                targetValue = if (index == selectedItem) 24.dp else 0.dp,
+                targetValue = if (selected) 24.dp else 0.dp,
                 animationSpec = tween(
                     durationMillis = TAB_SELECTOR_ANIMATION_DURATION,
                     easing = LinearOutSlowInEasing
@@ -78,13 +83,13 @@ fun BottomNavigationBar(
             )
 
             NavigationBarItem(
-                selected = index == selectedItem,
+                selected = selected,
                 icon = {
                     Box(
                         modifier = Modifier.fillMaxSize(),
                         contentAlignment = Alignment.TopCenter,
                     ) {
-                        if (selectedItem == index) {
+                        if (selected) {
                             Box(
                                 modifier = Modifier
                                     .height(2.dp)
@@ -99,7 +104,7 @@ fun BottomNavigationBar(
                         Icon(
                             modifier = Modifier.align(Alignment.Center),
                             painter =
-                                if (selectedItem == index) {
+                                if (selected) {
                                     if (isSystemInDarkTheme()) {
                                         painterResource(topLevelRoute.darkSelectedIconRes)
                                     } else {
@@ -113,8 +118,13 @@ fun BottomNavigationBar(
                     }
                 },
                 onClick = {
-                    navController.navigate(topLevelRoute.route)
-                    selectedItem = index
+                    navController.navigate(topLevelRoute.route) {
+                        popUpTo(navController.graph.findStartDestination().id) {
+                            saveState = true
+                        }
+                        launchSingleTop = true
+                        restoreState = true
+                    }
                 },
                 colors = NavigationBarItemDefaults.colors(
                     indicatorColor = Color.Transparent

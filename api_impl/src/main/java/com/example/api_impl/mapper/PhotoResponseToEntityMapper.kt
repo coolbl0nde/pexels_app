@@ -1,14 +1,13 @@
 package com.example.api_impl.mapper
 
-import android.util.Log
-import com.example.core.model.Photo
+import com.example.data_api.entity.PhotoEntity
 import com.example.data_api.model.PhotoResponse
 import javax.inject.Inject
 
-class PhotoResponseMapper @Inject constructor() {
+class PhotoResponseToEntityMapper @Inject constructor() {
 
-    fun map(response: PhotoResponse): Photo {
-        return Photo(
+    fun map(response: PhotoResponse, query: String): PhotoEntity {
+        return PhotoEntity(
             id = response.id,
             width = response.width,
             height = response.height,
@@ -16,6 +15,7 @@ class PhotoResponseMapper @Inject constructor() {
             photographer = response.photographer,
             liked = response.liked,
             original = response.src.original,
+            query = query,
         )
     }
 }
