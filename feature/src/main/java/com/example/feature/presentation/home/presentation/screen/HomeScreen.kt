@@ -15,12 +15,10 @@ import androidx.compose.material.pullrefresh.pullRefresh
 import androidx.compose.material.pullrefresh.rememberPullRefreshState
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableLongStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -32,7 +30,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
-import com.example.core.utils.NO_ONE_FEATURED_COLLECTION_SELECTED
 import com.example.core.utils.empty
 import com.example.feature.presentation.home.presentation.HomeViewModel
 import com.example.feature.presentation.home.presentation.component.EmptyStateComponent
@@ -57,22 +54,31 @@ fun HomeScreen (
         }
 
         val featuredCollections = viewModel.collections.collectAsLazyPagingItems()
-        val selectedItem by viewModel.selectedItem.collectAsState()
+        val searchValue by viewModel.searchValue.collectAsState()
 
         val photos = viewModel.searchedPhotos.collectAsLazyPagingItems()
 
         val focusManager = LocalFocusManager.current
 
-        /*val refreshing = photos.loadState.refresh is LoadState.Loading
+        val refreshing = photos.loadState.refresh is LoadState.Loading
         val pullRefreshState = rememberPullRefreshState(
             refreshing = refreshing,
             onRefresh = { photos.refresh() }
-        )*/
+        )
 
-        LaunchedEffect(key1 = selectedItem) {
-            if (selectedItem.isNotEmpty()) {
+        LaunchedEffect(key1 = searchValue) {
+            if (searchValue.isNotEmpty()) {
                 viewModel.updatePhotos()
+            } else {
+                viewModel.resetSearchValue(featuredCollections.itemSnapshotList)
             }
+        }
+
+        LaunchedEffect (key1 = featuredCollections.itemSnapshotList.size) {
+            if (searchValue.isEmpty()) {
+                viewModel.resetSearchValue(featuredCollections.itemSnapshotList)
+            }
+
         }
 
         SearchBarComponent(
@@ -84,10 +90,12 @@ fun HomeScreen (
                 )
                 .fillMaxWidth(),
             text = text,
-            onTextChange = { text = it },
+            onTextChange = {
+                text = it
+                viewModel.setSearchValue(it)
+            },
             onSearch = {
-                viewModel.updateSelectedItem(NO_ONE_FEATURED_COLLECTION_SELECTED)
-                viewModel.onSearchRequest(it)
+                viewModel.setSearchValue(it)
             },
         )
 
@@ -104,9 +112,9 @@ fun HomeScreen (
                 HorizontalListComponent(
                     modifier = Modifier.padding( horizontal = 20.dp ),
                     featuredCollections = featuredCollections,
-                    selectedItem = selectedItem,
+                    selectedItem = searchValue,
                     onSelectedItemChange = {
-                        viewModel.updateSelectedItem(it)
+                        viewModel.setSearchValue(it)
                         focusManager.clearFocus()
                     },
                     onTextChange = { text = it }
@@ -120,7 +128,7 @@ fun HomeScreen (
         Box (
             modifier = Modifier
                 .weight(1f)
-                //.pullRefresh(pullRefreshState)
+                .pullRefresh(pullRefreshState)
         ) {
             when (photos.loadState.refresh) {
                 is LoadState.Error -> {
@@ -132,7 +140,7 @@ fun HomeScreen (
                                 val firstItem = featuredCollections.itemSnapshotList.first()?.title
 
                                 if (firstItem !== null) {
-                                    viewModel.selectItem(firstItem)
+                                    viewModel.setSearchValue(firstItem)
                                     viewModel.updatePhotos()
                                 }
                             },
@@ -167,11 +175,12 @@ fun HomeScreen (
                     )
                 }
             }
-            /*PullRefreshIndicator(
+
+            PullRefreshIndicator(
                 refreshing = refreshing,
                 state = pullRefreshState,
                 modifier = Modifier.align(Alignment.TopCenter)
-            )*/
+            )
         }
 
         when (photos.loadState.append) {

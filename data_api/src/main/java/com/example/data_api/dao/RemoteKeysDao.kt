@@ -9,12 +9,15 @@ import com.example.data_api.entity.RemoteKeys
 @Dao
 interface RemoteKeysDao {
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun insertAll(remoteKey: List<RemoteKeys>)
+    @Query("SELECT * FROM remote_keys WHERE id = :id")
+    suspend fun remoteKeysById(id: String): RemoteKeys?
 
-    @Query("SELECT * FROM remote_keys WHERE photoId = :photoId")
-    suspend fun remoteKeysRepoId(photoId: Long): RemoteKeys?
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    suspend fun insertRemoteKeys(remoteKeys: RemoteKeys)
+
+    @Query("DELETE FROM remote_keys WHERE id = :id")
+    suspend fun deleteById(id: String)
 
     @Query("DELETE FROM remote_keys")
-    suspend fun clearRemoteKeys()
+    suspend fun clearAll()
 }

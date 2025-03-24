@@ -3,29 +3,20 @@ package com.example.feature.presentation.home.presentation.component
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.paging.compose.LazyPagingItems
+import com.example.core.model.FeaturedCollection
 import com.example.core.utils.empty
-import com.example.feature.presentation.home.presentation.model.FeaturedCollectionUi
 
 @Composable
 fun HorizontalListComponent(
     modifier: Modifier = Modifier,
-    featuredCollections: LazyPagingItems<FeaturedCollectionUi>,
+    featuredCollections: LazyPagingItems<FeaturedCollection>,
     selectedItem: String,
-    onSelectedItemChange: (Int) -> Unit,
+    onSelectedItemChange: (String) -> Unit,
     onTextChange: (String) -> Unit,
 ) {
-
-    /*LaunchedEffect(key1 = featuredCollections.itemCount) {
-        if (featuredCollections.itemCount > 0 && selectedItem.isEmpty()) {
-            featuredCollections[0]?.let { firstItem ->
-                onSelectedItemChange(firstItem.title)
-            }
-        }
-    }*/
 
     LazyRow (
         modifier = modifier,
@@ -38,10 +29,10 @@ fun HorizontalListComponent(
 
                 HorizontalListItem(
                     text = featuredCollection.title,
-                    isSelected = featuredCollection.isSelected,/*featuredCollection.title == selectedItem*/
+                    isSelected = featuredCollection.title == selectedItem,
                     onClick = {
                         onTextChange(String.empty)
-                        onSelectedItemChange(featuredCollection.index)
+                        onSelectedItemChange(featuredCollection.title)
                     },
                 )
             }

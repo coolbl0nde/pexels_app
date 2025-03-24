@@ -3,24 +3,20 @@ package com.example.feature.presentation.home.presentation
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.paging.ItemSnapshotList
 import androidx.paging.PagingData
 import androidx.paging.cachedIn
-import androidx.paging.map
+import com.example.core.model.FeaturedCollection
 import com.example.core.model.Photo
 import com.example.core.utils.AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS
 import com.example.core.utils.AMOUNT_OF_PER_PAGE_PHOTOS
-import com.example.core.utils.FIRST_SELECTED_INDEX
 import com.example.core.utils.empty
 import com.example.feature.presentation.home.domain.usecase.GetFeaturedCollectionsUseCase
 import com.example.feature.presentation.home.domain.usecase.GetSearchedPhotosUseCase
-import com.example.feature.presentation.home.presentation.mapper.FeaturedCollectionDomainToUiMapper
-import com.example.feature.presentation.home.presentation.model.FeaturedCollectionUi
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
@@ -29,30 +25,28 @@ import javax.inject.Inject
 class HomeViewModel @Inject constructor(
     private val getFeaturedCollectionsUseCase: GetFeaturedCollectionsUseCase,
     private val getSearchedPhotosUseCase: GetSearchedPhotosUseCase,
-    private val featuredCollectionDomainToUiMapper: FeaturedCollectionDomainToUiMapper,
 ) : ViewModel() {
 
-    private val _collections = MutableStateFlow<PagingData<FeaturedCollectionUi>>(PagingData.empty())
-    val collections: StateFlow<PagingData<FeaturedCollectionUi>> = _collections.asStateFlow()
+    private val _collections = MutableStateFlow<PagingData<FeaturedCollection>>(PagingData.empty())
+    val collections: StateFlow<PagingData<FeaturedCollection>> = _collections.asStateFlow()
 
-    private val _selectedItem = MutableStateFlow(String.empty)
-    val selectedItem: StateFlow<String> = _selectedItem.asStateFlow()
+    private val _searchValue = MutableStateFlow(String.empty)
+    val searchValue: StateFlow<String> = _searchValue.asStateFlow()
 
     private val _searchedPhotos = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
     val searchedPhotos = _searchedPhotos.asStateFlow()
 
     init {
-        updateFeaturedCollections()
-        updateSelectedItem(FIRST_SELECTED_INDEX)
-        updatePhotos()
+        viewModelScope.launch {
+            updateFeaturedCollections()
+            updatePhotos()
+        }
     }
 
     fun updatePhotos() {
         viewModelScope.launch {
-            Log.d("tag", "${_selectedItem.value}")
-
             getSearchedPhotosUseCase(
-                query = _selectedItem.value,
+                query = _searchValue.value,
                 perPage = AMOUNT_OF_PER_PAGE_PHOTOS
             )
                 .cachedIn(viewModelScope)
@@ -69,34 +63,23 @@ class HomeViewModel @Inject constructor(
             )
                 .cachedIn(viewModelScope)
                 .collect { pagingData ->
-                    _collections.value = pagingData.map {
-                        featuredCollectionDomainToUiMapper.map(it)
-                    }
+                    _collections.value = pagingData
                 }
         }
     }
 
-    fun updateSelectedItem(selectedIndex: Int) {
-        viewModelScope.launch {
-            val tabs = _collections.value.map { collection ->
-                val isSelected = selectedIndex == collection.index
-                if (isSelected) {
-                    _selectedItem.value = collection.title
-                }
+    fun setSearchValue(text: String) {
+        _searchValue.value = text
+    }
 
-                collection.copy(isSelected = isSelected)
+    fun resetSearchValue(featuredCollections: ItemSnapshotList<FeaturedCollection>) {
+        if (featuredCollections.isNotEmpty()) {
+            val firstItem = featuredCollections.first()?.title
+
+            if (firstItem !== null) {
+                setSearchValue(firstItem)
             }
-
-            _collections.value = tabs
         }
-    }
-
-    fun selectItem(title: String) {
-        _selectedItem.value = title
-    }
-
-    fun onSearchRequest(text: String) {
-        _selectedItem.value = text
     }
 
     fun retryFetchData() {
