@@ -1,6 +1,5 @@
 package com.example.api_impl.remoteMediator
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -58,7 +57,7 @@ class FeaturedCollectionsRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    collectionDao.deleteFeaturedCollections()
+                    collectionDao.deleteFeaturedCollections(entities)
                     remoteKeysDao.deleteById("featured_collection")
                 }
 
@@ -76,7 +75,6 @@ class FeaturedCollectionsRemoteMediator(
         } catch (e: IOException) {
             MediatorResult.Error(e)
         } catch (e: Exception) {
-            Log.d("tag", "$e")
             MediatorResult.Error(e)
         }
     }

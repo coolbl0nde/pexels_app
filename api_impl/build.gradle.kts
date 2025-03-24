@@ -34,23 +34,34 @@ android {
 }
 
 dependencies {
+    // Modules
     implementation(project(":data_api"))
     implementation(project(":core"))
 
     implementation(libs.androidx.ktx)
     implementation(libs.androidx.appcompat)
     implementation(libs.androidx.compose.material)
+
+    // DI
     implementation(libs.dagger.hilt.android)
+    ksp(libs.dagger.hilt.android.compiler)
+
+    // Network
     implementation(libs.retrofit2)
     implementation(libs.retrofit2.converter.gson)
     implementation(libs.okhttp3)
+
+    // Paging
     implementation(libs.androidx.paging.compose)
     implementation(libs.androidx.paging.runtime)
-    ksp(libs.dagger.hilt.android.compiler)
+
+    // Room (Database)
     implementation(libs.room.runtime)
     ksp(libs.room.compiler)
     implementation(libs.room.ktx)
     implementation(libs.room.paging)
+
+    // Testing
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)

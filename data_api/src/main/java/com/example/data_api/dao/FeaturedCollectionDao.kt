@@ -2,6 +2,7 @@ package com.example.data_api.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -27,6 +28,6 @@ interface FeaturedCollectionDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertCollections(collection: List<FeaturedCollectionEntity>)
 
-    @Query("DELETE FROM featured_collections")
-    suspend fun deleteFeaturedCollections()
+    @Delete
+    suspend fun deleteFeaturedCollections(collection: List<FeaturedCollectionEntity>)
 }

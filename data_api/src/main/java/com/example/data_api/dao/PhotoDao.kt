@@ -2,6 +2,7 @@ package com.example.data_api.dao
 
 import androidx.paging.PagingSource
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -32,12 +33,9 @@ interface PhotoDao {
     @Query("UPDATE photos SET liked = 1 WHERE id = :photoId")
     suspend fun updateLikedStatus(photoId: Int)
 
-    @Query("DELETE FROM photos WHERE id = :photoId")
-    suspend fun deleteLikedPhoto(photoId: Int)
+    @Delete
+    suspend fun deleteLikedPhoto(photo: PhotoEntity)
 
-    @Query("DELETE FROM photos WHERE `query` = :query")
-    suspend fun deletePhotosByQuery(query: String)
-
-    @Query("DELETE FROM photos")
-    suspend fun deleteAllPhotos()
+    @Delete
+    suspend fun deleteAllPhotos(photos: List<PhotoEntity>)
 }

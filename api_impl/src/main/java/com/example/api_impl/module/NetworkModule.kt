@@ -84,23 +84,23 @@ object NetworkModule {
     @Singleton
     fun providePexelsRepository(
         pexelsApi: PexelsApi,
+        database: PexelsDatabase,
+        photoDao: PhotoDao,
+        featuredCollectionDao: FeaturedCollectionDao,
         collectionResponseToEntityMapper: CollectionResponseToEntityMapper,
         collectionEntityToDomainMapper: CollectionEntityToDomainMapper,
         searchPhotosMapper: SearchPhotoResponseToEntityMapper,
         photoEntityToPhotoMapper: PhotoEntityToPhotoMapper,
-        database: PexelsDatabase,
-        photoDao: PhotoDao,
-        featuredCollectionDao: FeaturedCollectionDao,
     ): PexelsRepository {
         return PexelsRepositoryImpl(
             pexelsApi = pexelsApi,
+            database = database,
+            photoDao = photoDao,
+            featuredCollectionDao = featuredCollectionDao,
             collectionResponseToEntityMapper = collectionResponseToEntityMapper,
             collectionEntityToDomainMapper = collectionEntityToDomainMapper,
             searchPhotoToEntityMapper = searchPhotosMapper,
             photoEntityToPhotoMapper = photoEntityToPhotoMapper,
-            database = database,
-            photoDao = photoDao,
-            featuredCollectionDao = featuredCollectionDao,
         )
     }
 

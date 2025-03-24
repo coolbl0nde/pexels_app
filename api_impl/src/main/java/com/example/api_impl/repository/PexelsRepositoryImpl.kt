@@ -26,13 +26,13 @@ import javax.inject.Inject
 @OptIn(ExperimentalPagingApi::class)
 class PexelsRepositoryImpl @Inject constructor(
     private val pexelsApi: PexelsApi,
+    private val photoDao: PhotoDao,
+    private val featuredCollectionDao: FeaturedCollectionDao,
+    private val database: PexelsDatabase,
     private val collectionResponseToEntityMapper: CollectionResponseToEntityMapper,
     private val collectionEntityToDomainMapper: CollectionEntityToDomainMapper,
     private val searchPhotoToEntityMapper: SearchPhotoResponseToEntityMapper,
     private val photoEntityToPhotoMapper: PhotoEntityToPhotoMapper,
-    private val photoDao: PhotoDao,
-    private val featuredCollectionDao: FeaturedCollectionDao,
-    private val database: PexelsDatabase,
 ): PexelsRepository {
 
     override fun getFeaturedCollections(perPage: Int): Flow<PagingData<FeaturedCollection>> {

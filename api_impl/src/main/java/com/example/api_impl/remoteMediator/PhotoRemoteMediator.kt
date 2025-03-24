@@ -1,6 +1,5 @@
 package com.example.api_impl.remoteMediator
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -60,7 +59,7 @@ class PhotoRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    photoDao.deleteAllPhotos()
+                    photoDao.deleteAllPhotos(entities)
                     remoteKeysDao.deleteById("photos_$query")
                 }
                 photoDao.insertPhotos(entities)

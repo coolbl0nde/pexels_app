@@ -1,6 +1,7 @@
 package com.example.data_api.dao
 
 import androidx.room.Dao
+import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
@@ -18,6 +19,6 @@ interface RemoteKeysDao {
     @Query("DELETE FROM remote_keys WHERE id = :id")
     suspend fun deleteById(id: String)
 
-    @Query("DELETE FROM remote_keys")
-    suspend fun clearAll()
+    @Delete
+    suspend fun clearAll(remoteKeys: List<RemoteKeys>)
 }
