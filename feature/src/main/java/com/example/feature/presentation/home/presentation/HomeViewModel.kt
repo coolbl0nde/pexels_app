@@ -1,6 +1,5 @@
 package com.example.feature.presentation.home.presentation
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.paging.ItemSnapshotList
@@ -84,5 +83,6 @@ class HomeViewModel @Inject constructor(
 
     fun retryFetchData() {
         updateFeaturedCollections()
+        updatePhotos()
     }
 }

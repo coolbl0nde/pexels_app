@@ -11,7 +11,6 @@ class CollectionEntityToDomainMapper @Inject constructor() {
             id = entity.id,
             title = entity.title,
             timestamp = entity.timestamp,
-            index = entity.index
         )
     }
 }

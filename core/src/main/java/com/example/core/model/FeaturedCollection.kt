@@ -4,5 +4,4 @@ data class FeaturedCollection(
     val id: String,
     val title: String,
     val timestamp: Long,
-    val index: Int,
 )

@@ -8,5 +8,4 @@ data class FeaturedCollectionEntity(
     @PrimaryKey val id: String,
     val title: String,
     val timestamp: Long = System.currentTimeMillis(),
-    val index: Int,
 )

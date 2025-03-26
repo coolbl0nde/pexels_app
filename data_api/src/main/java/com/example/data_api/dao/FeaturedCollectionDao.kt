@@ -13,7 +13,7 @@ import kotlinx.coroutines.flow.Flow
 @Dao
 interface FeaturedCollectionDao {
 
-    @Query("SELECT * FROM featured_collections ORDER BY `index` ASC")
+    @Query("SELECT * FROM featured_collections ORDER BY timestamp ASC")
     fun getFeaturedCollections(): PagingSource<Int, FeaturedCollectionEntity>
 
     @Query("SELECT COUNT(*) FROM featured_collections")
