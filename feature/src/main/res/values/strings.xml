@@ -5,4 +5,6 @@
     <string name="explore">Explore</string>
     <string name="try_again">Try Again</string>
     <string name="no_network">No network</string>
+    <string name="back">Back</string>
+    <string name="download">Download</string>
 </resources>

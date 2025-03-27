@@ -6,6 +6,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import com.example.feature.presentation.bookmarks.BookmarksScreen
+import com.example.feature.presentation.details.presentation.DetailsScreen
 import com.example.feature.presentation.home.presentation.screen.HomeScreen
 
 @Composable
@@ -20,11 +21,19 @@ fun AppNavHost(
         startDestination = Home
     ){
         composable<Home>{
-            HomeScreen(navController)
+            HomeScreen(
+                onPhotoClick = {
+                    navController.navigate(Details)
+                }
+            )
         }
 
         composable<Bookmarks> {
             BookmarksScreen()
+        }
+
+        composable<Details> {
+            DetailsScreen()
         }
     }
 }

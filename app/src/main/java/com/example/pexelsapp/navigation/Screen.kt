@@ -6,3 +6,5 @@ import kotlinx.serialization.Serializable
 object Home
 @Serializable
 object Bookmarks
+@Serializable
+object Details

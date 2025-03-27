@@ -9,11 +9,16 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavDestination.Companion.hasRoute
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.pexelsapp.navigation.AppNavHost
 import com.example.pexelsapp.navigation.BottomNavigationBar
+import com.example.pexelsapp.navigation.Details
 import com.example.pexelsapp.ui.theme.PexelsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -30,9 +35,17 @@ class MainActivity : ComponentActivity() {
 
                     val navController = rememberNavController()
 
+                    val navBackStackEntry by navController.currentBackStackEntryAsState()
+                    val currentDestination = navBackStackEntry?.destination
+
                     Scaffold (
                         bottomBar = {
-                            BottomNavigationBar(navController)
+
+                            if (currentDestination?.hierarchy?.any {
+                                it.hasRoute(route = Details::class)
+                            } == false) {
+                                BottomNavigationBar(navController)
+                            }
                         }
                     ) { paddingValues ->
                         AppNavHost(
