@@ -8,11 +8,10 @@ import javax.inject.Inject
 class CollectionResponseToEntityMapper @Inject constructor() {
 
     fun map(response: FeaturedCollectionsResponse, page: Int): List<FeaturedCollectionEntity> {
-        return response.collections.mapIndexed { index, dto ->
+        return response.collections.map { dto ->
             FeaturedCollectionEntity(
                 id = dto.id,
                 title = dto.title,
-                index = (index + 1) + ((page - 1) * AMOUNT_OF_PER_PAGE_FEATURED_COLLECTIONS),
             )
         }
     }

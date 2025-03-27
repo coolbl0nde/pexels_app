@@ -77,10 +77,15 @@ dependencies {
 
     // Testing
     testImplementation(libs.junit)
+    testImplementation(libs.kotlinx.coroutines.test)
+    testImplementation(libs.mockk)
     androidTestImplementation(libs.androidx.test.ext)
     androidTestImplementation(libs.androidx.test.espresso.core)
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
+    testImplementation(libs.androidx.paging.testing)
+    testImplementation("app.cash.turbine:turbine:1.2.0")
+
 
     // Debug
     debugImplementation(libs.androidx.compose.ui.tooling)
