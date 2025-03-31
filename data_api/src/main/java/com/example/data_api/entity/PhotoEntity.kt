@@ -13,5 +13,6 @@ data class PhotoEntity(
     val liked: Boolean,
     val original: String,
     val query: String,
-    val createdAt: Long = System.currentTimeMillis()
+    val createdAt: Long = System.currentTimeMillis(),
+    val isFavorite: Boolean,
 )

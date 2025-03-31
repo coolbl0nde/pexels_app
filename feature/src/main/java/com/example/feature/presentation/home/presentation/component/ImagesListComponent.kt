@@ -22,7 +22,7 @@ import com.example.core.model.Photo
 fun ImagesListComponent(
     modifier: Modifier = Modifier,
     photos: LazyPagingItems<Photo>,
-    onPhotoClick: () -> Unit,
+    onPhotoClick: (Long) -> Unit,
 ) {
     LazyVerticalStaggeredGrid(
         modifier = modifier,
@@ -44,7 +44,7 @@ fun ImagesListComponent(
                             .clip(RoundedCornerShape(20))
                             .aspectRatio(aspectRatio)
                             .clickable {
-                                onPhotoClick()
+                                onPhotoClick(photo.id)
                             },
                         model = photo.original,
                         contentDescription = null,

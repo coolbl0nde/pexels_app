@@ -4,6 +4,7 @@ import com.example.api_impl.bd.PexelsDatabase
 import com.example.api_impl.mapper.CollectionEntityToDomainMapper
 import com.example.api_impl.mapper.CollectionResponseToEntityMapper
 import com.example.api_impl.mapper.PhotoEntityToPhotoMapper
+import com.example.api_impl.mapper.PhotoResponseToPhotoMapper
 import com.example.api_impl.mapper.SearchPhotoResponseToEntityMapper
 import com.example.api_impl.repository.PexelsRepositoryImpl
 import com.example.core.utils.BASE_URL
@@ -91,6 +92,7 @@ object NetworkModule {
         collectionEntityToDomainMapper: CollectionEntityToDomainMapper,
         searchPhotosMapper: SearchPhotoResponseToEntityMapper,
         photoEntityToPhotoMapper: PhotoEntityToPhotoMapper,
+        photoResponseToPhotoMapper: PhotoResponseToPhotoMapper,
     ): PexelsRepository {
         return PexelsRepositoryImpl(
             pexelsApi = pexelsApi,
@@ -101,6 +103,7 @@ object NetworkModule {
             collectionEntityToDomainMapper = collectionEntityToDomainMapper,
             searchPhotoToEntityMapper = searchPhotosMapper,
             photoEntityToPhotoMapper = photoEntityToPhotoMapper,
+            photoResponseToPhotoMapper = photoResponseToPhotoMapper,
         )
     }
 

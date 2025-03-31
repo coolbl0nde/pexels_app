@@ -15,6 +15,7 @@ class PhotoEntityToPhotoMapper @Inject constructor(){
             photographer = photoEntity.photographer,
             liked = photoEntity.liked,
             original = photoEntity.original,
+            isFavorite = photoEntity.isFavorite,
         )
     }
 }

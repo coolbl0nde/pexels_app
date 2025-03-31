@@ -40,7 +40,7 @@ import okio.IOException
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen (
-    onPhotoClick: () -> Unit,
+    onPhotoClick: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     Column(
