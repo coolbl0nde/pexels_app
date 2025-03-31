@@ -60,9 +60,7 @@ fun AppNavHost(
                 animationSpec = tween(600)
             ) },
         ) { backStackEntry ->
-            val details: Details = backStackEntry.toRoute()
             DetailsScreen(
-                photoId = details.id,
                 onBackClick = {
                     navController.popBackStack()
                 }

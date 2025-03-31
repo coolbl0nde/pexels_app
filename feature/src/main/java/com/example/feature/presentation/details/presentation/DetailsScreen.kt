@@ -1,5 +1,6 @@
 package com.example.feature.presentation.details.presentation
 
+import android.widget.Toast
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -28,7 +29,6 @@ import com.example.feature.presentation.details.presentation.component.TopBarCom
 
 @Composable
 fun DetailsScreen(
-    photoId: Long,
     onBackClick: () -> Unit,
     viewModel: DetailsViewModel = hiltViewModel(),
 ) {
@@ -113,8 +113,8 @@ fun DetailsScreen(
                 }
             }
 
-            else -> {
-
+            is DetailsUiState.UnknownError -> {
+                Toast.makeText(context, "Ошибка: ${state.message}", Toast.LENGTH_SHORT).show()
             }
         }
     }

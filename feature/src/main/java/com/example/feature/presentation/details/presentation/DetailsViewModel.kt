@@ -61,7 +61,6 @@ class DetailsViewModel @Inject constructor(
     }
 
     fun downloadImage(context: Context, imageUrl: String, fileName: String) {
-
         viewModelScope.launch(Dispatchers.IO) {
             val contentResolver = context.contentResolver
 
