@@ -3,6 +3,7 @@ package com.example.data_api.repository
 import androidx.paging.PagingData
 import com.example.core.model.FeaturedCollection
 import com.example.core.model.Photo
+import com.example.data_api.entity.PhotoEntity
 import com.example.data_api.model.PhotoResult
 import kotlinx.coroutines.flow.Flow
 
@@ -11,4 +12,5 @@ interface PexelsRepository {
     fun getSearchedPhotos(query: String, perPage: Int): Flow<PagingData<Photo>>
     suspend fun getPhotoByIdFromNetwork(id: Long): PhotoResult
     suspend fun updateFavoriteStatus(photoId: Long, isFavorite: Boolean)
+    fun getBookmarks(perPage: Int): Flow<PagingData<Photo>>
 }

@@ -15,4 +15,5 @@ data class PhotoEntity(
     val query: String,
     val createdAt: Long = System.currentTimeMillis(),
     val isFavorite: Boolean,
+    val favoriteMarkedAt: Long?,
 )

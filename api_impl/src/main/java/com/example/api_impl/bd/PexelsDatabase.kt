@@ -15,7 +15,7 @@ import com.example.data_api.entity.RemoteKeys
         FeaturedCollectionEntity::class,
         RemoteKeys::class,
     ],
-    version = 10,
+    version = 11,
     exportSchema = false
 )
 abstract class PexelsDatabase: RoomDatabase() {

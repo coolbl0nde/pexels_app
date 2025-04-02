@@ -25,7 +25,7 @@ class PhotoRemoteMediator(
     private val remoteKeysDao = database.remoteKeysDao()
 
     override suspend fun initialize(): InitializeAction {
-        val cacheTimeout = TimeUnit.MILLISECONDS.convert(1, TimeUnit.HOURS)
+        val cacheTimeout = TimeUnit.MILLISECONDS.convert(5, TimeUnit.MINUTES)
         val lastUpdated = photoDao.getLastUpdated(query) ?: 0L
 
         return if (System.currentTimeMillis() - lastUpdated <= cacheTimeout) {

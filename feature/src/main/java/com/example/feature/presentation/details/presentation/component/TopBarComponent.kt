@@ -18,6 +18,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.feature.R
 
 @Composable
@@ -48,10 +49,11 @@ fun TopBarComponent(
         Text(
             modifier = Modifier
                 .align(Alignment.Center)
-                .padding(horizontal = 40.dp),
+                .padding(horizontal = 45.dp),
             text = photographer,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight(700),
+            fontSize = 18.sp,
         )
     }
 }

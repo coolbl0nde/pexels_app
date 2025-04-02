@@ -1,5 +1,6 @@
 package com.example.api_impl.repository
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -19,6 +20,7 @@ import com.example.core.utils.PREFETCH_DISTANCE_PHOTO
 import com.example.data_api.api.PexelsApi
 import com.example.data_api.dao.FeaturedCollectionDao
 import com.example.data_api.dao.PhotoDao
+import com.example.data_api.entity.PhotoEntity
 import com.example.data_api.model.PhotoResult
 import com.example.data_api.repository.PexelsRepository
 import kotlinx.coroutines.flow.Flow
@@ -97,9 +99,28 @@ class PexelsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateFavoriteStatus(id: Long, isFavorite: Boolean) {
+        val favoriteMarkedAt = if (isFavorite) System.currentTimeMillis() else null
+
         photoDao.updateFavoriteStatus(
             id = id,
             isFavorite = isFavorite,
+            favoriteMarkedAt = favoriteMarkedAt,
         )
+    }
+
+    override fun getBookmarks(perPage: Int): Flow<PagingData<Photo>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = perPage,
+                prefetchDistance = PREFETCH_DISTANCE_PHOTO,
+                initialLoadSize = perPage
+            ),
+            pagingSourceFactory = { photoDao.getBookmarks() }
+        ).flow.map { pagingData ->
+            pagingData.map { photoEntity ->
+                Log.d("tag", "$photoEntity")
+                photoEntityToPhotoMapper.map(photoEntity)
+            }
+        }
     }
 }
