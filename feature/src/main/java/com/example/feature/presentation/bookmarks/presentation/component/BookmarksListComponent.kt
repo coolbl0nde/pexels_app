@@ -1,7 +1,12 @@
 package com.example.feature.presentation.bookmarks.presentation.component
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.awaitFirstDown
+import androidx.compose.foundation.gestures.waitForUpOrCancellation
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.aspectRatio
@@ -15,11 +20,18 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.composed
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.painter.ColorPainter
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
@@ -51,15 +63,17 @@ fun BookmarksListComponent(
                     val aspectRatio = bookmark.width.toFloat() / bookmark.height
 
                     Box (
-                        modifier = Modifier.clip(RoundedCornerShape(20)),
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20))
+                            .bouncingClickable {
+                                onPhotoClick(bookmark.id)
+                            },
                         contentAlignment = Alignment.Center,
                     ) {
                         AsyncImage(
                             modifier = Modifier
                                 .aspectRatio(aspectRatio)
-                                .clickable {
-                                    onPhotoClick(bookmark.id)
-                                },
+                                ,
                             model = bookmark.original,
                             contentDescription = null,
                             contentScale = ContentScale.Crop,
@@ -90,4 +104,37 @@ fun BookmarksListComponent(
             }
         },
     )
+}
+
+
+enum class State { Pressed, Idle }
+
+@OptIn(ExperimentalFoundationApi::class)
+fun Modifier.bouncingClickable(
+    onClick: () -> Unit,
+) = composed {
+    var state by remember { mutableStateOf(State.Idle) }
+    val scale by animateFloatAsState(if (state == State.Pressed) 0.70f else 1f)
+
+    this
+        .graphicsLayer {
+            scaleX = scale
+            scaleY = scale
+        }
+        .clickable (
+            interactionSource = remember { MutableInteractionSource() },
+            indication = null,
+            onClick = onClick
+        )
+        .pointerInput(state) {
+            awaitPointerEventScope {
+                state = if (state == State.Pressed) {
+                    waitForUpOrCancellation()
+                    State.Idle
+                } else {
+                    awaitFirstDown(false)
+                    State.Pressed
+                }
+            }
+        }
 }
