@@ -9,6 +9,6 @@ import kotlinx.coroutines.flow.Flow
 interface PexelsRepository {
     fun getFeaturedCollections(perPage: Int): Flow<PagingData<FeaturedCollection>>
     fun getSearchedPhotos(query: String, perPage: Int): Flow<PagingData<Photo>>
-    suspend fun getPhotoByIdFromNetwork(id: Long): PhotoResult
+    suspend fun getPhotoDetails(id: Long): PhotoResult
     suspend fun updateFavoriteStatus(photoId: Long, isFavorite: Boolean)
 }

@@ -25,7 +25,7 @@ interface PhotoDao {
     suspend fun getLastUpdated(query: String): Long?
 
     @Query("SELECT * FROM photos WHERE id = :id")
-    fun getPhotosById(id: Long): PhotoEntity?
+    fun getPhoto(id: Long): PhotoEntity?
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun insertPhotos(photoEntity: List<PhotoEntity>)

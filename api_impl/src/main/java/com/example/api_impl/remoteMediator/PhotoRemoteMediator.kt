@@ -59,7 +59,6 @@ class PhotoRemoteMediator(
 
             database.withTransaction {
                 if (loadType == LoadType.REFRESH) {
-                    //photoDao.deleteAllPhotos(entities)
                     photoDao.deletePhotos()
                     remoteKeysDao.deleteById("photos_$query")
                 }

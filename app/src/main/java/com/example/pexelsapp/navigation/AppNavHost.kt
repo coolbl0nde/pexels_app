@@ -14,6 +14,7 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.toRoute
+import com.example.core.utils.ANIMATION_DURATION_MS
 import com.example.feature.presentation.bookmarks.BookmarksScreen
 import com.example.feature.presentation.details.presentation.DetailsScreen
 import com.example.feature.presentation.home.presentation.screen.HomeScreen
@@ -32,11 +33,11 @@ fun AppNavHost(
         composable<Home>(
             exitTransition = { slideOutOfContainer(
                 AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(600)
+                animationSpec = tween(ANIMATION_DURATION_MS)
             ) },
             enterTransition = { slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(600)
+                animationSpec = tween(ANIMATION_DURATION_MS)
             ) },
         ){
             HomeScreen(
@@ -53,11 +54,11 @@ fun AppNavHost(
         composable<Details>(
             enterTransition = { slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(600)
+                animationSpec = tween(ANIMATION_DURATION_MS)
             ) },
             exitTransition = { slideOutOfContainer(
                 AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(600)
+                animationSpec = tween(ANIMATION_DURATION_MS)
             ) },
         ) { backStackEntry ->
             DetailsScreen(

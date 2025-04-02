@@ -9,7 +9,6 @@ import com.example.api_impl.bd.PexelsDatabase
 import com.example.api_impl.mapper.CollectionEntityToDomainMapper
 import com.example.api_impl.mapper.CollectionResponseToEntityMapper
 import com.example.api_impl.mapper.PhotoEntityToPhotoMapper
-import com.example.api_impl.mapper.PhotoResponseToPhotoMapper
 import com.example.api_impl.mapper.SearchPhotoResponseToEntityMapper
 import com.example.api_impl.remoteMediator.FeaturedCollectionsRemoteMediator
 import com.example.api_impl.remoteMediator.PhotoRemoteMediator
@@ -35,7 +34,6 @@ class PexelsRepositoryImpl @Inject constructor(
     private val collectionEntityToDomainMapper: CollectionEntityToDomainMapper,
     private val searchPhotoToEntityMapper: SearchPhotoResponseToEntityMapper,
     private val photoEntityToPhotoMapper: PhotoEntityToPhotoMapper,
-    private val photoResponseToPhotoMapper: PhotoResponseToPhotoMapper,
 ): PexelsRepository {
 
     override fun getFeaturedCollections(perPage: Int): Flow<PagingData<FeaturedCollection>> {
@@ -79,11 +77,9 @@ class PexelsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotoByIdFromNetwork(id: Long): PhotoResult {
+    override suspend fun getPhotoDetails(id: Long): PhotoResult {
         return try {
-            //val photoResponse = pexelsApi.getPhotoById(id = id.toInt())
-
-            val photoEntity = photoDao.getPhotosById(id = id)
+            val photoEntity = photoDao.getPhoto(id = id)
 
             if (photoEntity != null) {
                 PhotoResult.Success(photoEntityToPhotoMapper.map(photoEntity))

@@ -13,7 +13,7 @@ import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.core.utils.Details
 import com.example.data_api.model.PhotoResult
-import com.example.feature.presentation.details.domain.usecase.GetPhotoDetailsByIdUseCase
+import com.example.feature.presentation.details.domain.usecase.GetPhotoDetailsUseCase
 import com.example.feature.presentation.details.domain.usecase.UpdateFavoriteStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
@@ -27,7 +27,7 @@ import javax.inject.Inject
 
 @HiltViewModel
 class DetailsViewModel @Inject constructor(
-    private val getPhotoDetailsByIdUseCase: GetPhotoDetailsByIdUseCase,
+    private val getPhotoDetailsUseCase: GetPhotoDetailsUseCase,
     private val updateFavoriteStatusUseCase: UpdateFavoriteStatusUseCase,
     private val savedStateHandle: SavedStateHandle,
 ): ViewModel() {
@@ -43,7 +43,7 @@ class DetailsViewModel @Inject constructor(
 
     private fun getPhotoById(){
         viewModelScope.launch(Dispatchers.IO) {
-            val result = getPhotoDetailsByIdUseCase(details.id)
+            val result = getPhotoDetailsUseCase(details.id)
 
             _uiState.value = when(result) {
                 is PhotoResult.Success -> DetailsUiState.Success(result.photo)
