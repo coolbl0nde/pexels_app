@@ -90,7 +90,7 @@ fun DetailsScreen(
                 )
             }
 
-            is DetailsUiState.NotFoundError -> {
+            is DetailsUiState.Error -> {
 
                 Column (
                     modifier = Modifier.fillMaxSize(),
@@ -110,11 +110,11 @@ fun DetailsScreen(
                             color = MaterialTheme.colorScheme.primary,
                         )
                     }
-                }
-            }
 
-            is DetailsUiState.UnknownError -> {
-                Toast.makeText(context, "Ошибка: ${state.message}", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(context,
+                        stringResource(R.string.error, state.message), Toast.LENGTH_SHORT).show()
+
+                }
             }
         }
     }

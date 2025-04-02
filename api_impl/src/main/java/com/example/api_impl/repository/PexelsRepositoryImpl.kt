@@ -18,7 +18,6 @@ import com.example.core.utils.PREFETCH_DISTANCE_PHOTO
 import com.example.data_api.api.PexelsApi
 import com.example.data_api.dao.FeaturedCollectionDao
 import com.example.data_api.dao.PhotoDao
-import com.example.data_api.model.PhotoResult
 import com.example.data_api.repository.PexelsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -77,18 +76,13 @@ class PexelsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotoDetails(id: Long): PhotoResult {
+    override suspend fun getPhotoDetails(id: Long): Result<Photo> {
         return try {
             val photoEntity = photoDao.getPhoto(id = id)
 
-            if (photoEntity != null) {
-                PhotoResult.Success(photoEntityToPhotoMapper.map(photoEntity))
-            } else {
-                PhotoResult.Error.NotFound
-            }
-
+            Result.success(photoEntityToPhotoMapper.map(photoEntity))
         } catch (e: Exception) {
-            PhotoResult.Error.Unknown(e.message)
+            Result.failure(e)
         }
     }
 

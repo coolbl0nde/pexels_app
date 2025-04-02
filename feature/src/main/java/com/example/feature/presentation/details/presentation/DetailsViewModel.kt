@@ -12,7 +12,6 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import androidx.navigation.toRoute
 import com.example.core.utils.Details
-import com.example.data_api.model.PhotoResult
 import com.example.feature.presentation.details.domain.usecase.GetPhotoDetailsUseCase
 import com.example.feature.presentation.details.domain.usecase.UpdateFavoriteStatusUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -21,6 +20,7 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.net.URL
 import javax.inject.Inject
 
@@ -35,21 +35,23 @@ class DetailsViewModel @Inject constructor(
     private val details: Details = savedStateHandle.toRoute()
 
     private val _uiState = MutableStateFlow<DetailsUiState>(DetailsUiState.Loading)
-    val uiState: StateFlow<DetailsUiState> =_uiState.asStateFlow()
+    val uiState: StateFlow<DetailsUiState> = _uiState.asStateFlow()
 
     init {
         getPhotoById()
     }
 
     private fun getPhotoById(){
-        viewModelScope.launch(Dispatchers.IO) {
-            val result = getPhotoDetailsUseCase(details.id)
-
-            _uiState.value = when(result) {
-                is PhotoResult.Success -> DetailsUiState.Success(result.photo)
-                is PhotoResult.Error.NotFound -> DetailsUiState.NotFoundError
-                is PhotoResult.Error.Unknown -> DetailsUiState.UnknownError(result.message)
-            }
+        viewModelScope.launch {
+            getPhotoDetailsUseCase(details.id)
+                .onSuccess { photo ->
+                    _uiState.value = DetailsUiState.Success(photo)
+                }
+                .onFailure { exception ->
+                    _uiState.value = DetailsUiState.Error(
+                        exception.message ?: "Unknown error"
+                    )
+                }
         }
     }
 
