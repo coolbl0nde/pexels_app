@@ -78,7 +78,7 @@ class PexelsRepositoryImpl @Inject constructor(
 
     override suspend fun getPhotoDetails(id: Long): Result<Photo> {
         return try {
-            val photoEntity = photoDao.getPhoto(id = id)
+            val photoEntity = photoDao.getPhoto(id)
 
             Result.success(photoEntityToPhotoMapper.map(photoEntity))
         } catch (e: Exception) {

@@ -8,6 +8,6 @@ class GetPhotoDetailsUseCase @Inject constructor(
     private val pexelsRepository: PexelsRepository,
 ){
     suspend operator fun invoke(id: Long): Result<Photo> {
-        return pexelsRepository.getPhotoDetails(id = id)
+        return pexelsRepository.getPhotoDetails(id)
     }
 }
