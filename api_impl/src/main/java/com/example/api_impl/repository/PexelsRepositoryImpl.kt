@@ -75,4 +75,21 @@ class PexelsRepositoryImpl @Inject constructor(
             }
         }
     }
+
+    override suspend fun getPhotoDetails(id: Long): Result<Photo> {
+        return try {
+            val photoEntity = photoDao.getPhoto(id)
+
+            Result.success(photoEntityToPhotoMapper.map(photoEntity))
+        } catch (e: Exception) {
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun updateFavoriteStatus(id: Long, isFavorite: Boolean) {
+        photoDao.updateFavoriteStatus(
+            id = id,
+            isFavorite = isFavorite,
+        )
+    }
 }

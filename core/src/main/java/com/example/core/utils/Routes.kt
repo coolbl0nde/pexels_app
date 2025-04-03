@@ -1,4 +1,4 @@
-package com.example.pexelsapp.navigation
+package com.example.core.utils
 
 import kotlinx.serialization.Serializable
 

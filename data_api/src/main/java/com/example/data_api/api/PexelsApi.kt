@@ -1,8 +1,10 @@
 package com.example.data_api.api
 
 import com.example.data_api.model.FeaturedCollectionsResponse
+import com.example.data_api.model.PhotoResponse
 import com.example.data_api.model.SearchPhotosResponse
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface PexelsApi {
@@ -18,4 +20,9 @@ interface PexelsApi {
         @Query("page") page: Int,
         @Query("per_page") perPage: Int = 30,
     ): SearchPhotosResponse
+
+    @GET("photos/{id}")
+    suspend fun getPhotoById(
+        @Path("id") id: Int,
+    ): PhotoResponse
 }

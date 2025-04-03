@@ -17,4 +17,5 @@ data class Photo(
     val photographer: String,
     val liked: Boolean,
     val original: String,
+    val isFavorite: Boolean,
 )

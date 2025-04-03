@@ -1,6 +1,5 @@
 package com.example.feature.presentation.home.presentation.screen
 
-import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -27,7 +26,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.navigation.NavHostController
 import androidx.paging.LoadState
 import androidx.paging.compose.collectAsLazyPagingItems
 import com.example.core.utils.empty
@@ -42,7 +40,7 @@ import okio.IOException
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun HomeScreen (
-    navController: NavHostController,
+    onPhotoClick: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
 ) {
     Column(
@@ -172,6 +170,7 @@ fun HomeScreen (
                     ImagesListComponent(
                         modifier = Modifier.padding( horizontal = 20.dp ),
                         photos = photos,
+                        onPhotoClick = onPhotoClick,
                     )
                 }
             }

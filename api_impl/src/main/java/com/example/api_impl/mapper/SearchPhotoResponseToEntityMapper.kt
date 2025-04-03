@@ -7,7 +7,6 @@ import javax.inject.Inject
 class SearchPhotoResponseToEntityMapper @Inject constructor(
     private val photoEntityMapper: PhotoResponseToEntityMapper,
 ) {
-
     fun map(response: SearchPhotosResponse, query: String): List<PhotoEntity> {
         return response.photos.map { photoEntityMapper.map(it, query) }
     }
