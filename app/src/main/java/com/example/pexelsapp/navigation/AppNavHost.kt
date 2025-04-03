@@ -89,6 +89,13 @@ fun AppNavHost(
             BookmarksScreen(
                 onPhotoClick = { id ->
                     navController.navigate(Details(id))
+                },
+                onExploreClick = {
+                    navController.navigate(Home) {
+                        popUpTo(Home) {
+                            inclusive = true
+                        }
+                    }
                 }
             )
         }

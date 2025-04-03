@@ -1,5 +1,6 @@
 package com.example.feature.presentation.bookmarks.presentation
 
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
@@ -9,6 +10,7 @@ import androidx.compose.material.pullrefresh.PullRefreshIndicator
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,6 +32,7 @@ import okio.IOException
 @Composable
 fun BookmarksScreen(
     onPhotoClick: (Long) -> Unit,
+    onExploreClick: () -> Unit,
     viewModel: BookmarksViewModel = hiltViewModel(),
 ) {
 
@@ -48,15 +51,6 @@ fun BookmarksScreen(
 
 
         when (bookmarks.loadState.refresh) {
-            is LoadState.Error -> {
-                val error = (bookmarks.loadState.refresh as LoadState.Error).error
-
-                if (error is NullPointerException) {
-                    Text(text = "ПУСТО")
-                }
-                Text(text = "ПУСТО")
-
-            }
             is LoadState.Loading -> {
                 Row(
                     modifier = Modifier
@@ -71,18 +65,35 @@ fun BookmarksScreen(
                 }
             }
             else -> {
-                BookmarksListComponent(
-                    modifier = Modifier.padding( horizontal = 20.dp ),
-                    bookmarks = bookmarks,
-                    onPhotoClick = onPhotoClick,
-                )
+
+                if (bookmarks.itemSnapshotList.isNotEmpty()) {
+                    BookmarksListComponent(
+                        modifier = Modifier.padding( horizontal = 20.dp ),
+                        bookmarks = bookmarks,
+                        onPhotoClick = onPhotoClick,
+                    )
+                } else {
+
+                    Column (
+                        modifier = Modifier.fillMaxSize(),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        Text(text = stringResource(R.string.you_haven_t_saved_anything_yet))
+
+                        TextButton(
+                            onClick = onExploreClick
+                        ) {
+                            Text(
+                                text = stringResource(R.string.explore),
+                                fontSize = 18.sp,
+                            )
+                        }
+                    }
+                }
+
+
             }
         }
-
-        /*PullRefreshIndicator(
-            refreshing = refreshing,
-            state = pullRefreshState,
-            modifier = Modifier.align(Alignment.TopCenter)
-        )*/
     }
 }
