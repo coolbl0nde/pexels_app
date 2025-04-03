@@ -5,7 +5,6 @@ import com.example.data_api.model.PhotoResponse
 import javax.inject.Inject
 
 class PhotoResponseToEntityMapper @Inject constructor() {
-
     fun map(response: PhotoResponse, query: String): PhotoEntity {
         return PhotoEntity(
             id = response.id,

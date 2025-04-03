@@ -1,18 +1,16 @@
 package com.example.pexelsapp.navigation
 
-import android.util.Log
 import androidx.compose.animation.AnimatedContentTransitionScope
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.feature.presentation.bookmarks.presentation.BookmarksScreen
+import com.example.core.utils.ANIMATION_DURATION_MS
 import com.example.feature.presentation.details.presentation.DetailsScreen
 import com.example.feature.presentation.home.presentation.screen.HomeScreen
 
@@ -67,7 +65,7 @@ fun AppNavHost(
                     } == true) {
                     slideOutOfContainer(
                         AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(600)
+                        animationSpec = tween(ANIMATION_DURATION_MS)
                     )
                 } else {
                     null
@@ -79,7 +77,7 @@ fun AppNavHost(
                     } == true) {
                     slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(600)
+                        animationSpec = tween(ANIMATION_DURATION_MS)
                     )
                 } else {
                     null
@@ -103,11 +101,11 @@ fun AppNavHost(
         composable<Details>(
             enterTransition = { slideIntoContainer(
                 AnimatedContentTransitionScope.SlideDirection.Left,
-                animationSpec = tween(600)
+                animationSpec = tween(ANIMATION_DURATION_MS)
             ) },
             exitTransition = { slideOutOfContainer(
                 AnimatedContentTransitionScope.SlideDirection.Right,
-                animationSpec = tween(600)
+                animationSpec = tween(ANIMATION_DURATION_MS)
             ) },
         ) { backStackEntry ->
             DetailsScreen(

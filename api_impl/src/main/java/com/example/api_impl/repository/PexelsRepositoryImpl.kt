@@ -1,6 +1,5 @@
 package com.example.api_impl.repository
 
-import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.Pager
 import androidx.paging.PagingConfig
@@ -10,7 +9,6 @@ import com.example.api_impl.bd.PexelsDatabase
 import com.example.api_impl.mapper.CollectionEntityToDomainMapper
 import com.example.api_impl.mapper.CollectionResponseToEntityMapper
 import com.example.api_impl.mapper.PhotoEntityToPhotoMapper
-import com.example.api_impl.mapper.PhotoResponseToPhotoMapper
 import com.example.api_impl.mapper.SearchPhotoResponseToEntityMapper
 import com.example.api_impl.remoteMediator.FeaturedCollectionsRemoteMediator
 import com.example.api_impl.remoteMediator.PhotoRemoteMediator
@@ -20,8 +18,6 @@ import com.example.core.utils.PREFETCH_DISTANCE_PHOTO
 import com.example.data_api.api.PexelsApi
 import com.example.data_api.dao.FeaturedCollectionDao
 import com.example.data_api.dao.PhotoDao
-import com.example.data_api.entity.PhotoEntity
-import com.example.data_api.model.PhotoResult
 import com.example.data_api.repository.PexelsRepository
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
@@ -37,7 +33,6 @@ class PexelsRepositoryImpl @Inject constructor(
     private val collectionEntityToDomainMapper: CollectionEntityToDomainMapper,
     private val searchPhotoToEntityMapper: SearchPhotoResponseToEntityMapper,
     private val photoEntityToPhotoMapper: PhotoEntityToPhotoMapper,
-    private val photoResponseToPhotoMapper: PhotoResponseToPhotoMapper,
 ): PexelsRepository {
 
     override fun getFeaturedCollections(perPage: Int): Flow<PagingData<FeaturedCollection>> {
@@ -81,20 +76,13 @@ class PexelsRepositoryImpl @Inject constructor(
         }
     }
 
-    override suspend fun getPhotoByIdFromNetwork(id: Long): PhotoResult {
+    override suspend fun getPhotoDetails(id: Long): Result<Photo> {
         return try {
-            //val photoResponse = pexelsApi.getPhotoById(id = id.toInt())
+            val photoEntity = photoDao.getPhoto(id)
 
-            val photoEntity = photoDao.getPhotosById(id = id)
-
-            if (photoEntity != null) {
-                PhotoResult.Success(photoEntityToPhotoMapper.map(photoEntity))
-            } else {
-                PhotoResult.Error.NotFound
-            }
-
+            Result.success(photoEntityToPhotoMapper.map(photoEntity))
         } catch (e: Exception) {
-            PhotoResult.Error.Unknown(e.message)
+            Result.failure(e)
         }
     }
 
@@ -118,7 +106,6 @@ class PexelsRepositoryImpl @Inject constructor(
             pagingSourceFactory = { photoDao.getBookmarks() }
         ).flow.map { pagingData ->
             pagingData.map { photoEntity ->
-                Log.d("tag", "$photoEntity")
                 photoEntityToPhotoMapper.map(photoEntity)
             }
         }
