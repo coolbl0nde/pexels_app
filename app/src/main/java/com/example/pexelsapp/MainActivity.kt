@@ -18,6 +18,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.core.utils.SPLASH_SCREEN_DELAY_MS
 import com.example.pexelsapp.navigation.AppNavHost
 import com.example.pexelsapp.navigation.BottomNavigationBar
 import com.example.pexelsapp.navigation.Details
@@ -36,7 +37,7 @@ class MainActivity : ComponentActivity() {
 
         splashscreen.setKeepOnScreenCondition { keepSplashScreen }
         lifecycleScope.launch {
-            delay(3000)
+            delay(SPLASH_SCREEN_DELAY_MS)
             keepSplashScreen = false
         }
 

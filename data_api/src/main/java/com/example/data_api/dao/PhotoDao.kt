@@ -20,7 +20,6 @@ interface PhotoDao {
 
     @Query("SELECT * FROM photos WHERE isFavorite = 1 ORDER BY favoriteMarkedAt DESC")
     fun getBookmarks(): PagingSource<Int, PhotoEntity>
-    /*ORDER BY createdAt ASC*/
 
     @Query("SELECT MAX(createdAt) FROM photos WHERE `query` = :query")
     suspend fun getLastUpdated(query: String): Long?

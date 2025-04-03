@@ -32,7 +32,7 @@ fun AppNavHost(
                     } == true) {
                     slideOutOfContainer(
                         AnimatedContentTransitionScope.SlideDirection.Left,
-                        animationSpec = tween(600)
+                        animationSpec = tween(ANIMATION_DURATION_MS)
                     )
                 } else {
                     null
@@ -44,7 +44,7 @@ fun AppNavHost(
                     } == true) {
                     slideIntoContainer(
                         AnimatedContentTransitionScope.SlideDirection.Right,
-                        animationSpec = tween(600)
+                        animationSpec = tween(ANIMATION_DURATION_MS)
                     )
                 } else {
                     null
