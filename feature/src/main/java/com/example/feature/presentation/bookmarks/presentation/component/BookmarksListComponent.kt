@@ -73,10 +73,10 @@ fun BookmarksListComponent(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .shimmer()
-                                        .background(MaterialTheme.colorScheme.surface)
+                                        .background(MaterialTheme.colorScheme.secondaryContainer)
                                 )
                             },
-                            error = { ColorPainter(MaterialTheme.colorScheme.surface) },
+                            error = { ColorPainter(MaterialTheme.colorScheme.secondaryContainer) },
                         )
                         Box(
                             modifier = Modifier
