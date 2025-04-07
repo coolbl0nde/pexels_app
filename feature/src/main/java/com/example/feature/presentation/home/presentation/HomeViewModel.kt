@@ -35,11 +35,19 @@ class HomeViewModel @Inject constructor(
     private val _searchedPhotos = MutableStateFlow<PagingData<Photo>>(PagingData.empty())
     val searchedPhotos = _searchedPhotos.asStateFlow()
 
+    private val _isLoading = MutableStateFlow(true)
+    val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
+
     init {
         viewModelScope.launch {
-            updateFeaturedCollections()
-            updatePhotos()
+            loadInitialData()
+            _isLoading.value = false
         }
+    }
+
+    fun loadInitialData(){
+        updateFeaturedCollections()
+        updatePhotos()
     }
 
     fun updatePhotos() {

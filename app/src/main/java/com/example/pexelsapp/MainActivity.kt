@@ -3,6 +3,7 @@ package com.example.pexelsapp
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
@@ -19,6 +20,7 @@ import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.core.utils.SPLASH_SCREEN_DELAY_MS
+import com.example.feature.presentation.home.presentation.HomeViewModel
 import com.example.pexelsapp.navigation.AppNavHost
 import com.example.pexelsapp.navigation.BottomNavigationBar
 import com.example.pexelsapp.navigation.Details
@@ -29,16 +31,15 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
+
+    private val homeViewModel: HomeViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashscreen = installSplashScreen()
-        var keepSplashScreen = true
-
         super.onCreate(savedInstanceState)
 
-        splashscreen.setKeepOnScreenCondition { keepSplashScreen }
-        lifecycleScope.launch {
-            delay(SPLASH_SCREEN_DELAY_MS)
-            keepSplashScreen = false
+        splashscreen.setKeepOnScreenCondition {
+            homeViewModel.isLoading.value
         }
 
         setContent {
