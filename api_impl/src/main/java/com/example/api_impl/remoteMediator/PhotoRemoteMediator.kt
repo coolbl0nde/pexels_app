@@ -1,5 +1,6 @@
 package com.example.api_impl.remoteMediator
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -36,7 +37,7 @@ class PhotoRemoteMediator(
     }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PhotoEntity>): MediatorResult {
-        return try {
+        try {
             val page = when (loadType) {
                 LoadType.REFRESH -> 1
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
@@ -51,6 +52,10 @@ class PhotoRemoteMediator(
                 perPage = state.config.pageSize,
                 page = page
             )
+
+            if (page == 1 && response.photos.isEmpty()){
+                return MediatorResult.Error(NullPointerException())
+            }
 
             val entities = photoToEntityMapper.map(response, query)
 
@@ -72,11 +77,11 @@ class PhotoRemoteMediator(
                 )
             }
 
-            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+            return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: IOException) {
-            MediatorResult.Error(e)
+            return MediatorResult.Error(e)
         } catch (e: Exception) {
-            MediatorResult.Error(e)
+            return MediatorResult.Error(e)
         }
     }
 }

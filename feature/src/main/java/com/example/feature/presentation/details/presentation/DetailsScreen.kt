@@ -1,10 +1,13 @@
 package com.example.feature.presentation.details.presentation
 
+import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.gestures.scrollable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.lazy.LazyColumn
@@ -21,6 +24,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.feature.R
 import com.example.feature.presentation.details.presentation.component.BottomBarComponent
@@ -38,9 +42,7 @@ fun DetailsScreen(
 
     Column (
         modifier = Modifier
-            .fillMaxSize()
-            .verticalScroll(rememberScrollState()),
-        horizontalAlignment = Alignment.CenterHorizontally,
+            .fillMaxSize(),
     ) {
 
         TopBarComponent(
@@ -66,28 +68,36 @@ fun DetailsScreen(
 
             is DetailsUiState.Success -> {
 
-                ImageZoomComponent(
-                    imageUrl = state.photo.original,
-                    width = state.photo.width,
-                    height = state.photo.height,
-                )
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .verticalScroll(rememberScrollState()),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
 
-                BottomBarComponent(
-                    onDownloadImage = {
-                        viewModel.downloadImage(
-                            context = context,
-                            imageUrl = state.photo.original,
-                            fileName = "pexels_${state.photo.id}"
-                        )
-                    },
-                    onUpdateFavoriteStatus = {
-                        viewModel.updateFavoriteStatus(
-                            id = state.photo.id,
-                            isFavorite = state.photo.isFavorite,
-                        )
-                    },
-                    isFavorite = state.photo.isFavorite,
-                )
+                    ImageZoomComponent(
+                        imageUrl = state.photo.original,
+                        width = state.photo.width,
+                        height = state.photo.height,
+                    )
+
+                    BottomBarComponent(
+                        onDownloadImage = {
+                            viewModel.downloadImage(
+                                context = context,
+                                imageUrl = state.photo.original,
+                                fileName = "pexels_${state.photo.id}"
+                            )
+                        },
+                        onUpdateFavoriteStatus = {
+                            viewModel.updateFavoriteStatus(
+                                id = state.photo.id,
+                                isFavorite = state.photo.isFavorite,
+                            )
+                        },
+                        isFavorite = state.photo.isFavorite,
+                    )
+                }
             }
 
             is DetailsUiState.Error -> {
@@ -108,8 +118,11 @@ fun DetailsScreen(
                         Text(
                             text = stringResource(R.string.explore),
                             color = MaterialTheme.colorScheme.primary,
+                            fontSize = 18.sp,
                         )
                     }
+
+                    Log.d("tag", "${state.message}")
 
                     Toast.makeText(context,
                         stringResource(R.string.error, state.message), Toast.LENGTH_SHORT).show()

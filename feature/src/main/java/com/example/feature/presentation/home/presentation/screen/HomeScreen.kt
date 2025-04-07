@@ -140,6 +140,7 @@ fun HomeScreen (
                                 if (firstItem !== null) {
                                     viewModel.setSearchValue(firstItem)
                                     viewModel.updatePhotos()
+                                    focusManager.clearFocus()
                                 }
                             },
                             onTextChange = { text = String.empty },
