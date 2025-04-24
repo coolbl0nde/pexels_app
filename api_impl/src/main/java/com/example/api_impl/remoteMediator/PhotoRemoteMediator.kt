@@ -8,9 +8,11 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.api_impl.bd.PexelsDatabase
 import com.example.api_impl.mapper.SearchPhotoResponseToEntityMapper
+import com.example.core.utils.FIRST_PAGE_INDEX
 import com.example.data_api.api.PexelsApi
 import com.example.data_api.entity.PhotoEntity
 import com.example.data_api.entity.RemoteKeys
+import kotlinx.coroutines.delay
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -39,7 +41,7 @@ class PhotoRemoteMediator(
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PhotoEntity>): MediatorResult {
         try {
             val page = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> FIRST_PAGE_INDEX
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
                     val remoteKey = remoteKeysDao.remoteKeysById("photos_$query")
@@ -53,7 +55,7 @@ class PhotoRemoteMediator(
                 page = page
             )
 
-            if (page == 1 && response.photos.isEmpty()){
+            if (page == FIRST_PAGE_INDEX && response.photos.isEmpty()){
                 return MediatorResult.Error(NullPointerException())
             }
 
@@ -72,7 +74,7 @@ class PhotoRemoteMediator(
                     RemoteKeys(
                         id = "photos_$query",
                         nextKey = nextPage,
-                        prevKey = if (page == 1) null else page - 1
+                        prevKey = if (page == FIRST_PAGE_INDEX) null else page - 1
                     )
                 )
             }

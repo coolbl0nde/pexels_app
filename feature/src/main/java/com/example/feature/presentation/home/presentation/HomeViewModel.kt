@@ -17,6 +17,8 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.Dispatchers
 import javax.inject.Inject
 
 
@@ -39,15 +41,16 @@ class HomeViewModel @Inject constructor(
     val isLoading: StateFlow<Boolean> = _isLoading.asStateFlow()
 
     init {
-        viewModelScope.launch {
-            loadInitialData()
-            _isLoading.value = false
-        }
+        loadInitialData()
     }
 
     fun loadInitialData(){
         updateFeaturedCollections()
         updatePhotos()
+    }
+
+    fun setIsLoading(value: Boolean){
+        _isLoading.value = value
     }
 
     fun updatePhotos() {

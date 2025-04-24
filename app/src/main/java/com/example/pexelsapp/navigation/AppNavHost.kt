@@ -18,6 +18,7 @@ import com.example.feature.presentation.home.presentation.screen.HomeScreen
 fun AppNavHost(
     modifier: Modifier = Modifier,
     navController: NavHostController,
+    setIsLoading: () -> Unit,
 ) {
 
     NavHost(
@@ -54,7 +55,8 @@ fun AppNavHost(
             HomeScreen(
                 onPhotoClick = { id ->
                     navController.navigate(Details(id))
-                }
+                },
+                setIsLoading = setIsLoading,
             )
         }
 

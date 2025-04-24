@@ -1,6 +1,5 @@
 package com.example.feature.presentation.home.presentation.screen
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -22,6 +21,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -44,6 +44,7 @@ import okio.IOException
 fun HomeScreen (
     onPhotoClick: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
+    setIsLoading: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -60,11 +61,17 @@ fun HomeScreen (
 
         val focusManager = LocalFocusManager.current
 
-        val refreshing = photos.loadState.refresh is LoadState.Loading
+        val refreshing = photos.loadState.refresh is LoadState.Loading && photos.itemCount > 0
         val pullRefreshState = rememberPullRefreshState(
             refreshing = refreshing,
             onRefresh = { photos.refresh() }
         )
+
+        LaunchedEffect(photos.loadState.refresh) {
+            if (photos.loadState.refresh is LoadState.NotLoading) {
+                setIsLoading()
+            }
+        }
 
         LaunchedEffect(key1 = searchValue) {
             if (searchValue.isNotEmpty()) {
@@ -181,7 +188,6 @@ fun HomeScreen (
 
             PullRefreshIndicator(
                 modifier = Modifier
-                    //.fillMaxWidth()
                     .align(Alignment.TopCenter),
                 refreshing = refreshing,
                 state = pullRefreshState,

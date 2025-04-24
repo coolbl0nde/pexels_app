@@ -11,6 +11,8 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
@@ -19,15 +21,16 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
-import com.example.core.utils.SPLASH_SCREEN_DELAY_MS
 import com.example.feature.presentation.home.presentation.HomeViewModel
 import com.example.pexelsapp.navigation.AppNavHost
 import com.example.pexelsapp.navigation.BottomNavigationBar
 import com.example.pexelsapp.navigation.Details
 import com.example.pexelsapp.ui.theme.PexelsAppTheme
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.cancel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withTimeoutOrNull
 
 @AndroidEntryPoint
 class MainActivity : ComponentActivity() {
@@ -37,6 +40,20 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         val splashscreen = installSplashScreen()
         super.onCreate(savedInstanceState)
+
+        lifecycleScope.launch {
+            withTimeoutOrNull(5000L) {
+                homeViewModel.isLoading
+                    .collect { isLoading ->
+                        if (!isLoading) {
+                            cancel()
+                        }
+                    }
+            }
+            if (homeViewModel.isLoading.value) {
+                homeViewModel.setIsLoading(false)
+            }
+        }
 
         splashscreen.setKeepOnScreenCondition {
             homeViewModel.isLoading.value
@@ -48,6 +65,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background,
                 ) {
+
                     val navController = rememberNavController()
 
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
@@ -66,20 +84,12 @@ class MainActivity : ComponentActivity() {
                         AppNavHost(
                             modifier = Modifier.padding(paddingValues),
                             navController = navController,
+                            setIsLoading = { homeViewModel.setIsLoading(false) },
                         )
                     }
 
                 }
             }
         }
-    }
-}
-
-
-@Preview(showBackground = true)
-@Composable
-fun MainPreview() {
-    PexelsAppTheme {
-        AppNavHost(navController = rememberNavController())
     }
 }

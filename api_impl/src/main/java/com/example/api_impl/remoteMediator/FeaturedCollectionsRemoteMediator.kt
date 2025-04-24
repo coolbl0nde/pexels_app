@@ -7,6 +7,7 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.api_impl.bd.PexelsDatabase
 import com.example.api_impl.mapper.CollectionResponseToEntityMapper
+import com.example.core.utils.FIRST_PAGE_INDEX
 import com.example.data_api.api.PexelsApi
 import com.example.data_api.entity.FeaturedCollectionEntity
 import com.example.data_api.entity.RemoteKeys
@@ -37,7 +38,7 @@ class FeaturedCollectionsRemoteMediator(
     override suspend fun load(loadType: LoadType, state: PagingState<Int, FeaturedCollectionEntity>): MediatorResult {
         return try {
             val page = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> FIRST_PAGE_INDEX
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
                     val remoteKey = remoteKeysDao.remoteKeysById("featured_collection")
@@ -66,7 +67,7 @@ class FeaturedCollectionsRemoteMediator(
                     RemoteKeys(
                         id = "featured_collection",
                         nextKey = nextPage,
-                        prevKey = if (page == 1) null else page - 1
+                        prevKey = if (page == FIRST_PAGE_INDEX) null else page - 1
                     )
                 )
             }
