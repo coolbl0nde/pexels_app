@@ -156,10 +156,18 @@ fun HomeScreen (
                             onTextChange = { text = String.empty },
                         )
                     } else if (error is IOException){
+                        if(photos.itemCount > 0){
+                            ImagesListComponent(
+                                modifier = Modifier.padding( horizontal = 20.dp ),
+                                photos = photos,
+                                onPhotoClick = onPhotoClick,
+                            )
+                        } else {
+                            NetworkStubComponent(
+                                onTryAgain = { viewModel.retryFetchData() }
+                            )
+                        }
 
-                        NetworkStubComponent(
-                            onTryAgain = { viewModel.retryFetchData() }
-                        )
                     } else {
                         //TODO
                     }

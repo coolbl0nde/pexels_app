@@ -21,6 +21,7 @@ import androidx.navigation.NavDestination.Companion.hasRoute
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import com.example.core.utils.SPLASH_SCREEN_DELAY_MS
 import com.example.feature.presentation.home.presentation.HomeViewModel
 import com.example.pexelsapp.navigation.AppNavHost
 import com.example.pexelsapp.navigation.BottomNavigationBar
@@ -42,7 +43,7 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
 
         lifecycleScope.launch {
-            withTimeoutOrNull(5000L) {
+            withTimeoutOrNull(SPLASH_SCREEN_DELAY_MS) {
                 homeViewModel.isLoading
                     .collect { isLoading ->
                         if (!isLoading) {
