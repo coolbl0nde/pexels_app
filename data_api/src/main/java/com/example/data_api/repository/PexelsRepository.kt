@@ -10,4 +10,5 @@ interface PexelsRepository {
     fun getSearchedPhotos(query: String, perPage: Int): Flow<PagingData<Photo>>
     suspend fun getPhotoDetails(id: Long): Result<Photo>
     suspend fun updateFavoriteStatus(photoId: Long, isFavorite: Boolean)
+    fun getBookmarks(perPage: Int): Flow<PagingData<Photo>>
 }

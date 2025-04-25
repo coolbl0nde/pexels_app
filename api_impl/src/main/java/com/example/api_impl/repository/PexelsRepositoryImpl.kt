@@ -87,9 +87,27 @@ class PexelsRepositoryImpl @Inject constructor(
     }
 
     override suspend fun updateFavoriteStatus(id: Long, isFavorite: Boolean) {
+        val favoriteMarkedAt = if (isFavorite) System.currentTimeMillis() else null
+
         photoDao.updateFavoriteStatus(
             id = id,
             isFavorite = isFavorite,
+            favoriteMarkedAt = favoriteMarkedAt,
         )
+    }
+
+    override fun getBookmarks(perPage: Int): Flow<PagingData<Photo>> {
+        return Pager(
+            config = PagingConfig(
+                pageSize = perPage,
+                prefetchDistance = PREFETCH_DISTANCE_PHOTO,
+                initialLoadSize = perPage
+            ),
+            pagingSourceFactory = { photoDao.getBookmarks() }
+        ).flow.map { pagingData ->
+            pagingData.map { photoEntity ->
+                photoEntityToPhotoMapper.map(photoEntity)
+            }
+        }
     }
 }

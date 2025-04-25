@@ -16,6 +16,7 @@ class PhotoResponseToEntityMapper @Inject constructor() {
             original = response.src.original,
             query = query,
             isFavorite = false,
+            favoriteMarkedAt = null,
         )
     }
 }

@@ -18,8 +18,8 @@ interface PhotoDao {
     @Query("SELECT * FROM photos WHERE `query` = :query ORDER BY createdAt ASC")
     fun getPhotosByQuery(query: String): PagingSource<Int, PhotoEntity>
 
-    @Query("SELECT * FROM photos WHERE isFavorite = 1 ORDER BY createdAt ASC")
-    fun getFavoritePhotos(): Flow<List<PhotoEntity>>
+    @Query("SELECT * FROM photos WHERE isFavorite = 1 ORDER BY favoriteMarkedAt DESC")
+    fun getBookmarks(): PagingSource<Int, PhotoEntity>
 
     @Query("SELECT MAX(createdAt) FROM photos WHERE `query` = :query")
     suspend fun getLastUpdated(query: String): Long?
@@ -27,11 +27,15 @@ interface PhotoDao {
     @Query("SELECT * FROM photos WHERE id = :id")
     fun getPhoto(id: Long): PhotoEntity
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertPhotos(photoEntity: List<PhotoEntity>)
 
-    @Query("UPDATE photos SET isFavorite = :isFavorite WHERE id = :id")
-    suspend fun updateFavoriteStatus(id: Long, isFavorite: Boolean)
+    @Query("UPDATE photos SET isFavorite = :isFavorite, favoriteMarkedAt = :favoriteMarkedAt WHERE id = :id")
+    suspend fun updateFavoriteStatus(
+        id: Long,
+        isFavorite: Boolean,
+        favoriteMarkedAt: Long?
+    )
 
     @Query("DELETE FROM photos WHERE isFavorite = 0")
     suspend fun deletePhotos()

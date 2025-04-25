@@ -96,6 +96,7 @@ dependencies {
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
     implementation(libs.androidx.navigation.compose)
+    implementation(libs.core.splashscreen)
 
     // Serialization
     implementation(libs.kotlinx.serialization.json)

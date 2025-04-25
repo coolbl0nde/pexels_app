@@ -21,8 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -42,6 +44,7 @@ import okio.IOException
 fun HomeScreen (
     onPhotoClick: (Long) -> Unit,
     viewModel: HomeViewModel = hiltViewModel(),
+    setIsLoading: () -> Unit,
 ) {
     Column(
         modifier = Modifier.fillMaxSize(),
@@ -58,11 +61,17 @@ fun HomeScreen (
 
         val focusManager = LocalFocusManager.current
 
-        val refreshing = photos.loadState.refresh is LoadState.Loading
+        val refreshing = photos.loadState.refresh is LoadState.Loading && photos.itemCount > 0
         val pullRefreshState = rememberPullRefreshState(
             refreshing = refreshing,
             onRefresh = { photos.refresh() }
         )
+
+        LaunchedEffect(photos.loadState.refresh) {
+            if (photos.loadState.refresh is LoadState.NotLoading) {
+                setIsLoading()
+            }
+        }
 
         LaunchedEffect(key1 = searchValue) {
             if (searchValue.isNotEmpty()) {
@@ -126,6 +135,7 @@ fun HomeScreen (
         Box (
             modifier = Modifier
                 .weight(1f)
+                .fillMaxWidth()
                 .pullRefresh(pullRefreshState)
         ) {
             when (photos.loadState.refresh) {
@@ -140,15 +150,24 @@ fun HomeScreen (
                                 if (firstItem !== null) {
                                     viewModel.setSearchValue(firstItem)
                                     viewModel.updatePhotos()
+                                    focusManager.clearFocus()
                                 }
                             },
                             onTextChange = { text = String.empty },
                         )
                     } else if (error is IOException){
+                        if(photos.itemCount > 0){
+                            ImagesListComponent(
+                                modifier = Modifier.padding( horizontal = 20.dp ),
+                                photos = photos,
+                                onPhotoClick = onPhotoClick,
+                            )
+                        } else {
+                            NetworkStubComponent(
+                                onTryAgain = { viewModel.retryFetchData() }
+                            )
+                        }
 
-                        NetworkStubComponent(
-                            onTryAgain = { viewModel.retryFetchData() }
-                        )
                     } else {
                         //TODO
                     }
@@ -176,9 +195,10 @@ fun HomeScreen (
             }
 
             PullRefreshIndicator(
+                modifier = Modifier
+                    .align(Alignment.TopCenter),
                 refreshing = refreshing,
                 state = pullRefreshState,
-                modifier = Modifier.align(Alignment.TopCenter)
             )
         }
 

@@ -42,7 +42,7 @@ class DetailsViewModel @Inject constructor(
     }
 
     private fun getPhotoById(){
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
             getPhotoDetailsUseCase(details.id)
                 .onSuccess { photo ->
                     _uiState.value = DetailsUiState.Success(photo)

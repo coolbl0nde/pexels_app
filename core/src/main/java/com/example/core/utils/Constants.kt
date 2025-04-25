@@ -16,6 +16,10 @@ const val SEARCH_DEBOUNCE_DELAY = 500L
 
 const val ANIMATION_DURATION_MS = 600
 
+const val SPLASH_SCREEN_DELAY_MS = 5000L
+
+const val FIRST_PAGE_INDEX = 1
+
 
 
 

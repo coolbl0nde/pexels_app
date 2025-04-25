@@ -1,5 +1,6 @@
 package com.example.api_impl.remoteMediator
 
+import android.util.Log
 import androidx.paging.ExperimentalPagingApi
 import androidx.paging.LoadType
 import androidx.paging.PagingState
@@ -7,9 +8,11 @@ import androidx.paging.RemoteMediator
 import androidx.room.withTransaction
 import com.example.api_impl.bd.PexelsDatabase
 import com.example.api_impl.mapper.SearchPhotoResponseToEntityMapper
+import com.example.core.utils.FIRST_PAGE_INDEX
 import com.example.data_api.api.PexelsApi
 import com.example.data_api.entity.PhotoEntity
 import com.example.data_api.entity.RemoteKeys
+import kotlinx.coroutines.delay
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -36,9 +39,9 @@ class PhotoRemoteMediator(
     }
 
     override suspend fun load(loadType: LoadType, state: PagingState<Int, PhotoEntity>): MediatorResult {
-        return try {
+        try {
             val page = when (loadType) {
-                LoadType.REFRESH -> 1
+                LoadType.REFRESH -> FIRST_PAGE_INDEX
                 LoadType.PREPEND -> return MediatorResult.Success(endOfPaginationReached = true)
                 LoadType.APPEND -> {
                     val remoteKey = remoteKeysDao.remoteKeysById("photos_$query")
@@ -51,6 +54,10 @@ class PhotoRemoteMediator(
                 perPage = state.config.pageSize,
                 page = page
             )
+
+            if (page == FIRST_PAGE_INDEX && response.photos.isEmpty()){
+                return MediatorResult.Error(NullPointerException())
+            }
 
             val entities = photoToEntityMapper.map(response, query)
 
@@ -67,16 +74,16 @@ class PhotoRemoteMediator(
                     RemoteKeys(
                         id = "photos_$query",
                         nextKey = nextPage,
-                        prevKey = if (page == 1) null else page - 1
+                        prevKey = if (page == FIRST_PAGE_INDEX) null else page - 1
                     )
                 )
             }
 
-            MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
+            return MediatorResult.Success(endOfPaginationReached = endOfPaginationReached)
         } catch (e: IOException) {
-            MediatorResult.Error(e)
+            return MediatorResult.Error(e)
         } catch (e: Exception) {
-            MediatorResult.Error(e)
+            return MediatorResult.Error(e)
         }
     }
 }

@@ -55,6 +55,7 @@ dependencies {
     implementation(libs.androidx.compose.ui.tooling.preview)
     implementation(libs.androidx.compose.material)
     implementation(libs.androidx.compose.material3)
+    implementation(libs.compose.shimmer)
 
     // Navigation
     implementation(libs.androidx.navigation.compose)
@@ -84,8 +85,6 @@ dependencies {
     androidTestImplementation(platform(libs.androidx.compose.bom))
     androidTestImplementation(libs.androidx.compose.ui.test.junit4)
     testImplementation(libs.androidx.paging.testing)
-    testImplementation("app.cash.turbine:turbine:1.2.0")
-
 
     // Debug
     debugImplementation(libs.androidx.compose.ui.tooling)
